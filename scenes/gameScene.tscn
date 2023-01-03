@@ -1,0 +1,80 @@
+[gd_scene load_steps=11 format=3 uid="uid://c0v4qoleewo63"]
+
+[ext_resource type="Script" path="res://src/DependencyInjection/DependencyInjectionSystem.cs" id="1_vegin"]
+[ext_resource type="Script" path="res://src/GUI/Inputs/GenericClickButton.cs" id="1_yxlo1"]
+[ext_resource type="Script" path="res://src/NodeScripts/MainGameCamera.cs" id="2_og3ho"]
+[ext_resource type="Script" path="res://src/NodeScripts/MainSimulationLoop.cs" id="3_8am4c"]
+[ext_resource type="Script" path="res://src/Presentation/NavigationPathPresenter.cs" id="5_wxqvv"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1w8ri"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_axcq0"]
+albedo_color = Color(0.52549, 0.709804, 0.360784, 1)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_1cbps"]
+points = PackedVector3Array(-1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mxx37"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6y03j"]
+cull_mode = 2
+
+[node name="Scene" type="Node3D"]
+
+[node name="Dev menu" type="Node2D" parent="."]
+
+[node name="Panel" type="Panel" parent="Dev menu"]
+offset_right = 261.0
+offset_bottom = 149.0
+
+[node name="TabContainer" type="TabContainer" parent="Dev menu/Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Dev menu/Panel/TabContainer"]
+layout_mode = 2
+
+[node name="Place road" type="Button" parent="Dev menu/Panel/TabContainer/VBoxContainer"]
+layout_mode = 2
+text = "Place road
+"
+script = ExtResource("1_yxlo1")
+
+[node name="Scripts" type="Node3D" parent="."]
+
+[node name="DependencyInjectionSystem" type="Node3D" parent="Scripts"]
+script = ExtResource("1_vegin")
+
+[node name="RoadRenderer" type="Node3D" parent="Scripts"]
+
+[node name="SimulationLoop" type="Node" parent="Scripts"]
+script = ExtResource("3_8am4c")
+
+[node name="FloorPlane" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.96151, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="FloorPlane"]
+transform = Transform3D(10000, 0, 0, 0, 10000, 0, 0, 0, 10000, 0, 0, 0)
+mesh = SubResource("PlaneMesh_1w8ri")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("StandardMaterial3D_axcq0")
+
+[node name="CollisionShape3d" type="CollisionShape3D" parent="FloorPlane"]
+transform = Transform3D(10000, 0, 0, 0, 10000, 0, 0, 0, 10000, 0, 0, 0)
+shape = SubResource("ConvexPolygonShape3D_1cbps")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.700685, 0.713471, 0, -0.713471, 0.700685, -0.144804, 7.8453, 10.3625)
+script = ExtResource("2_og3ho")
+
+[node name="DirectionalLight3d" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.813101, 0.524096, -0.253358, 0, 0.435231, 0.900319, 0.582123, -0.73205, 0.353887, 0, 8.24193, 5.24779)
+shadow_enabled = true
+
+[node name="NavigationPathPresenter" type="Node3D" parent="."]
+script = ExtResource("5_wxqvv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_mxx37")
+surface_material_override/0 = SubResource("StandardMaterial3D_6y03j")
