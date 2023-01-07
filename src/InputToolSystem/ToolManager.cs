@@ -6,7 +6,7 @@ public class ToolManager: IToolManager
 {
     private IInputTool ActiveTool { get; set; }
     
-    public void SetActiveTool(IInputTool tool)
+    public void SetActiveTool(IInputTool tool, string extraData)
     {
         if (ActiveTool != null)
         {
@@ -14,7 +14,7 @@ public class ToolManager: IToolManager
         }
 
         ActiveTool = tool;
-        ActiveTool.Activate();
+        ActiveTool.Activate(extraData);
     }
 
     public void UnsetActiveTool()

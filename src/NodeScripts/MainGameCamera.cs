@@ -18,6 +18,8 @@ public partial class MainGameCamera : Camera3D
 	private float _velocity = 5;
 
 	[Inject] private IInputManager _inputManager;
+
+	private bool isRotating = false;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -27,7 +29,7 @@ public partial class MainGameCamera : Camera3D
 	}
 	
 	public override void _UnhandledInput(InputEvent inputEvent) {
-		if (Input.MouseMode == Input.MouseModeEnum.Captured)
+		if (isRotating)
 		{
 			if(inputEvent is InputEventMouseMotion mouseEvent)
 			{
@@ -42,15 +44,24 @@ public partial class MainGameCamera : Camera3D
 		
 		if (inputEvent is InputEventMouseButton mouseButtonEvent)
 		{
-			//todo do not handle click if click is on a 2d GUI element
-			if (inputEvent.IsPressed())
+			switch (mouseButtonEvent.ButtonIndex)
 			{
-				switch (mouseButtonEvent.ButtonIndex)
-				{
-					case MouseButton.Left:
+				case MouseButton.Left:
+					if (inputEvent.IsPressed())
+					{
 						PickMouseCameraRay();
-						break;
-				}
+					}
+					break;
+				case MouseButton.Right:
+					if (inputEvent.IsPressed())
+					{
+						isRotating = true;
+					}
+					else
+					{
+						isRotating = false;
+					}
+					break;
 			}
 		}
 	}
@@ -60,18 +71,18 @@ public partial class MainGameCamera : Camera3D
 	{
 		var direction = new Vector3(
 			(Input.IsKeyPressed(Key.D) ? 1 : 0) - (Input.IsKeyPressed(Key.A) ? 1 : 0),
-			(Input.IsKeyPressed(Key.S) ? 1 : 0) - (Input.IsKeyPressed(Key.W) ? 1 : 0),
-			(Input.IsKeyPressed(Key.E) ? 1 : 0) - (Input.IsKeyPressed(Key.Q) ? 1 : 0)
+			(Input.IsKeyPressed(Key.E) ? 1 : 0) - (Input.IsKeyPressed(Key.Q) ? 1 : 0),
+			(Input.IsKeyPressed(Key.S) ? 1 : 0) - (Input.IsKeyPressed(Key.W) ? 1 : 0)
 		).Normalized();
 
 		Translate(direction * _velocity * (float)delta);
 	}
 
-	public void PickMouseCameraRay()
+	private void PickMouseCameraRay()
 	{
 		var mousePos = GetViewport().GetMousePosition();
 		var rayFrom = ProjectRayOrigin(mousePos);
-		const int rayLength = 100;
+		const int rayLength = 1000;
 		var rayTo = rayFrom + ProjectRayNormal(mousePos) * rayLength;
 		var spaceState = GetWorld3d().DirectSpaceState;
 		var rayQuery = PhysicsRayQueryParameters3D.Create(rayFrom, rayTo);

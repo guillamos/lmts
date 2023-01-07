@@ -2,7 +2,7 @@
 
 public interface IInputTool
 {
-    public void Activate();
+    public void Activate(string extraData);
     public void Deactivate();
 
     public void ProcessTick();

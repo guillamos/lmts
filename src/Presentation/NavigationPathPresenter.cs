@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using Godot;
+using LMTS.Common.Constants;
+using LMTS.Common.Enums;
 using LMTS.Common.Models.World;
 using LMTS.DependencyInjection;
+using LMTS.Presentation.Utilities;
 using LMTS.State.WorldState.Abstract;
 using LMTS.State.WorldState.Collections;
 
@@ -18,9 +21,15 @@ public partial class NavigationPathPresenter: Node3D
     [Inject]
     private readonly IWorldStateCollectionStore<WorldNavigationPath> _pathCollectionStore;
 
+    private Material _asphaltMaterial;
+    private Material _sidewalkMaterial;
+
     public override void _Ready()
     {
         this.ResolveDependencies();
+
+        _asphaltMaterial = ResourceLoader.Load<Material>("res://assets/material/asphalt.tres");
+        _sidewalkMaterial = ResourceLoader.Load<Material>("res://assets/material/sidewalk.tres");
         
         //todo listen for property changes
         _pathCollectionStore.Items.CollectionChanged += PathsChanged;
@@ -58,62 +67,78 @@ public partial class NavigationPathPresenter: Node3D
 
     private void RenderPath(WorldNavigationPath newPath)
     {
-        //todo render with lanes and stuff
-        var fromPosition = newPath.From.Position + new Vector3(0, .1f, 0);
-        var toPosition = newPath.To.Position + new Vector3(0, .1f, 0);
+        //translation for preventing z fighting
+        var baseTranslation = new Vector3(0, 0.1f, 0);
         
-        var directionVector = fromPosition.DirectionTo(toPosition).Rotated(Vector3.Up, (float)Math.PI / 2);
-        var directionVectorInverse = Vector3.Zero - directionVector;
+        var fromPosition = newPath.From.Position + baseTranslation;
+        var toPosition = newPath.To.Position + baseTranslation;
         
-        var point1 = fromPosition + directionVector;
-        var point2 = fromPosition + directionVectorInverse;
+        var perpendicularDirectionVector = fromPosition.DirectionTo(toPosition).Rotated(Vector3.Up, (float)Math.PI / 2);
+
+        var newArrayMesh = new ArrayMesh();
         
-        var point3 = toPosition + directionVectorInverse;
-        var point4 = toPosition + directionVector;
+        var st = new SurfaceTool();
+
+        st.Begin(Mesh.PrimitiveType.Triangles);
+        
+        foreach (var lane in newPath.PathType.Lanes)
+        {
+            st = new SurfaceTool();
+
+            st.Begin(Mesh.PrimitiveType.Triangles);
+            
+            var currentIndex = 0;
+            
+            var fromPoint = fromPosition + (perpendicularDirectionVector * (float)lane.Offset);
+            var fromPointOffset = fromPosition + (perpendicularDirectionVector * ((float)lane.Offset + (float)lane.Width));
+            
+            var toPoint = toPosition + (perpendicularDirectionVector * (float)lane.Offset);
+            var toPointOffset = toPosition + (perpendicularDirectionVector * ((float)lane.Offset + (float)lane.Width));
+            
+            switch (lane.Type)
+            {
+                case PathLaneType.Sidewalk:
+                    st.SetMaterial(_sidewalkMaterial);
+                    //todo: separate method?
+                    var translation = new Vector3(0, 0.1f, 0);
+                    //render main surface
+                    currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, fromPoint + translation, fromPointOffset + translation, toPointOffset + translation, toPoint + translation);
+                    
+                    //render left kerb
+                    currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, fromPoint + translation, fromPoint, toPoint, toPoint + translation, true);
+                    
+                    //render right kerb
+                    currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, fromPointOffset + translation, fromPointOffset, toPointOffset, toPointOffset + translation);
+                    
+                    break;
+                case PathLaneType.BasicRoad:
+                    st.SetMaterial(_asphaltMaterial);
+                    currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, fromPoint, fromPointOffset, toPointOffset, toPoint);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            st.GenerateNormals();
+            st.GenerateTangents();
+            st.Index();
+
+            newArrayMesh = st.Commit(newArrayMesh);
+        }
         
         var newMeshInstance = new MeshInstance3D();
         
-        var st = new SurfaceTool();
-        
-        st.Begin(Mesh.PrimitiveType.Triangles);
-        
-        var currentIndex = 0;
-        
-        currentIndex = RenderQuad(st, currentIndex, point4, point3, point2, point1);
-        
-        st.GenerateNormals();
-        st.Index();
+        newMeshInstance.Mesh = newArrayMesh;
 
-        var newMesh = st.Commit();
-        newMeshInstance.Mesh = newMesh;
+        newMeshInstance.CreateTrimeshCollision();
+
+        var newCollision = newMeshInstance.GetChildren().OfType<StaticBody3D>().FirstOrDefault();
+        
+        NodeUtilities.SetWorldObjectMeta(newCollision, newPath);
+        NodeUtilities.SetWorldObjectMeta(newMeshInstance, newPath);
 
         AddChild(newMeshInstance);
-    }
-
-    //todo split to some drawing utilities class
-    //todo determine corners automatically
-    static int RenderQuad(SurfaceTool st, int currentIndex, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
-    {
-        st.SetUv(new Vector2(0, 1));
-        st.AddVertex(v1);
-
-        st.SetUv(new Vector2(0, 0));
-        st.AddVertex(v2);
-
-        st.SetUv(new Vector2(1, 0));
-        st.AddVertex(v3);
         
-        st.SetUv(new Vector2(1, 1));
-        st.AddVertex(v4);
-        
-        st.AddIndex(currentIndex + 0);
-        st.AddIndex(currentIndex + 1);
-        st.AddIndex(currentIndex + 2);
-
-        st.AddIndex(currentIndex + 0);
-        st.AddIndex(currentIndex + 2);
-        st.AddIndex(currentIndex + 3);
-        return currentIndex + 4;
     }
     
 }

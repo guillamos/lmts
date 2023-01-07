@@ -20,7 +20,7 @@ public class ActivateToolCommandHandler: IRequestHandler<ActivateToolCommand>
     public Task<Unit> Handle(ActivateToolCommand request, CancellationToken cancellationToken)
     {
         var tool = _toolMapping.GetTool(request.Type);
-        _toolManager.SetActiveTool(tool);
+        _toolManager.SetActiveTool(tool, request.ExtraData);
         
         return Task.FromResult(Unit.Value);
     }

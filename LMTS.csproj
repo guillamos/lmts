@@ -9,6 +9,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\CommandSystem\Commands" />
-    <Folder Include="src\State\LocalState" />
+    <Folder Include="src\Initialization\" />
   </ItemGroup>
 </Project>

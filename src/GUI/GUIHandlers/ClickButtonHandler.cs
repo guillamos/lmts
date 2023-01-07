@@ -21,14 +21,14 @@ namespace LMTS.GUI.GUIHandlers
             _mediator = mediator;
         }
 
-        public void HandleButtonAction(ButtonAction action)
+        public void HandleButtonAction(ButtonAction action, string actionData)
         {
             IRequest command;
             
             switch (action)
             {
                 case ButtonAction.ActivatePlaceRoadTool:
-                    command = new ActivateToolCommand(ToolType.PlaceNavigationPath);
+                    command = new ActivateToolCommand(ToolType.PlaceNavigationPath, actionData);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);

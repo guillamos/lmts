@@ -2,7 +2,7 @@
 
 public interface IToolManager
 {
-    public void SetActiveTool(IInputTool tool);
+    public void SetActiveTool(IInputTool tool, string extraData);
 
     public void UnsetActiveTool();
 

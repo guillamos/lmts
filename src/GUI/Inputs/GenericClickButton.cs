@@ -10,6 +10,9 @@ public partial class GenericClickButton : Button
 {
 	[Export]
 	private ButtonAction _action;
+	
+	[Export]
+	private string _actionData;
 
 	[Inject] private IClickButtonHandler _clickButtonHandler;
 
@@ -27,6 +30,6 @@ public partial class GenericClickButton : Button
 
 	private void OnButtonPressed()
 	{
-		_clickButtonHandler.HandleButtonAction(_action);
+		_clickButtonHandler.HandleButtonAction(_action, _actionData);
 	}
 }

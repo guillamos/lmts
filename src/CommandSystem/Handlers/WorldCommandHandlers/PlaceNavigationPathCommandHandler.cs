@@ -39,7 +39,7 @@ public class PlaceNavigationPathCommandHandler: IRequestHandler<PlaceNavigationP
 
         if (path == null)
         {
-            path = new WorldNavigationPath(WorldObjectState.Finalized, firstJunctionInStore, secondJunctionInStore);
+            path = new WorldNavigationPath(WorldObjectState.Finalized, firstJunctionInStore, secondJunctionInStore, request.PathType);
         }
         
         _pathCollectionStore.Items.Add(path);

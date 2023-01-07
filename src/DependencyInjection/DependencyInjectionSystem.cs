@@ -8,11 +8,13 @@ using LMTS.CommandSystem.Validators.WorldCommandValidators;
 using LMTS.Common.Models.World;
 using LMTS.GUI.Abstract;
 using LMTS.GUI.GUIHandlers;
+using LMTS.Initialization;
 using LMTS.InputHandling;
 using LMTS.InputHandling.Abstract;
 using LMTS.InputToolSystem;
 using LMTS.InputToolSystem.Abstract;
 using LMTS.InputToolSystem.Tools;
+using LMTS.State.LocalState;
 using LMTS.State.WorldState.Abstract;
 using LMTS.State.WorldState.Collections;
 using MediatR;
@@ -48,6 +50,10 @@ public partial class DependencyInjectionSystem: Node
         _container.RegisterSingleton<PlaceNavigationPathTool>();
         
         _container.RegisterSingleton<PlaceNavigationPathCommandValidator>();
+        
+        _container.RegisterSingleton<PathTypeInitializer>();
+        
+        _container.RegisterSingleton<StaticDataStore>();
         
         _container.RegisterSingleton<IWorldStateCollectionStore<WorldNavigationPath>, WorldNavigationPathCollectionStore>();
         _container.RegisterSingleton<IWorldStateCollectionStore<WorldNavigationJunction>, WorldNavigationJunctionCollectionStore>();
