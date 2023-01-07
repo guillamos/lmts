@@ -100,15 +100,15 @@ public partial class NavigationPathPresenter: Node3D
                 case PathLaneType.Sidewalk:
                     st.SetMaterial(_sidewalkMaterial);
                     //todo: separate method?
-                    var translation = new Vector3(0, 0.1f, 0);
+                    var sidewalkTranslation = new Vector3(0, 0.1f, 0);
                     //render main surface
-                    currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, fromPoint + translation, fromPointOffset + translation, toPointOffset + translation, toPoint + translation);
+                    currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, fromPoint + sidewalkTranslation, fromPointOffset + sidewalkTranslation, toPointOffset + sidewalkTranslation, toPoint + sidewalkTranslation);
                     
                     //render left kerb
-                    currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, fromPoint + translation, fromPoint, toPoint, toPoint + translation, true);
+                    currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, fromPoint + sidewalkTranslation, fromPoint - sidewalkTranslation, toPoint - sidewalkTranslation, toPoint + sidewalkTranslation, true);
                     
                     //render right kerb
-                    currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, fromPointOffset + translation, fromPointOffset, toPointOffset, toPointOffset + translation);
+                    currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, fromPointOffset + sidewalkTranslation, fromPointOffset - sidewalkTranslation, toPointOffset - sidewalkTranslation, toPointOffset + sidewalkTranslation);
                     
                     break;
                 case PathLaneType.BasicRoad:
