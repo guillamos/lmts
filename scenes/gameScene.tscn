@@ -85,10 +85,12 @@ _velocity = 46.42
 transform = Transform3D(0.813101, 0.524096, -0.253358, 0, 0.435231, 0.900319, 0.582123, -0.73205, 0.353887, 0, 8.24193, 5.24779)
 shadow_enabled = true
 
-[node name="NavigationPathPresenter" type="Node3D" parent="."]
+[node name="Presenters" type="Node3D" parent="."]
+
+[node name="NavigationPathPresenter" type="Node3D" parent="Presenters"]
 script = ExtResource("5_wxqvv")
 
-[node name="NavigationJunctionPresenter" type="Node3D" parent="."]
+[node name="NavigationJunctionPresenter" type="Node3D" parent="Presenters"]
 script = ExtResource("7_enxqc")
 
 [node name="TestingMesh" type="MeshInstance3D" parent="."]

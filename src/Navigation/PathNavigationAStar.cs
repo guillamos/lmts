@@ -101,6 +101,6 @@ public class PathNavigationAStar
         var laneId1 = _pathLaneIds[(pathFrom.Identifier, laneIdxFrom)];
         var laneId2 = _pathLaneIds[(pathTo.Identifier, laneIdxTo)];
 
-        _aStarGraph.ConnectPoints(laneId1, laneId2, false);
+        _aStarGraph.ConnectPoints(laneId1, laneId2, isBidirectional);
     }
 }
