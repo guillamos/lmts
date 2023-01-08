@@ -14,6 +14,7 @@ using LMTS.InputHandling.Abstract;
 using LMTS.InputToolSystem;
 using LMTS.InputToolSystem.Abstract;
 using LMTS.InputToolSystem.Tools;
+using LMTS.Navigation;
 using LMTS.State.LocalState;
 using LMTS.State.WorldState.Abstract;
 using LMTS.State.WorldState.Collections;
@@ -57,6 +58,8 @@ public partial class DependencyInjectionSystem: Node
         
         _container.RegisterSingleton<IWorldStateCollectionStore<WorldNavigationPath>, WorldNavigationPathCollectionStore>();
         _container.RegisterSingleton<IWorldStateCollectionStore<WorldNavigationJunction>, WorldNavigationJunctionCollectionStore>();
+        
+        _container.RegisterSingleton<NavigationGraphManager>();
         
         AddMediatr(_container);
     }

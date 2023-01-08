@@ -4,7 +4,7 @@ using LMTS.Common.Abstract;
 using LMTS.Common.Constants;
 using LMTS.Common.Models.World;
 
-namespace LMTS.Presentation.Utilities;
+namespace LMTS.Common.Utilities;
 
 public static class NodeUtilities
 {

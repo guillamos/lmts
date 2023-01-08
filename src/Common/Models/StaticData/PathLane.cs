@@ -6,7 +6,7 @@ namespace LMTS.Common.Models.StaticData;
 
 public class PathLane
 {
-    public PathLane(PathLaneType type, decimal offset, decimal width)
+    public PathLane(PathLaneType type, PathLaneDirection direction, decimal offset, decimal width)
     {
         Type = type;
         Offset = offset;
@@ -15,6 +15,8 @@ public class PathLane
     
 
     public PathLaneType Type { get; set; }
+    
+    public PathLaneDirection Direction { get; set; }
 
     public decimal Offset { get; set; }
 
