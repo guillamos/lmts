@@ -27,8 +27,7 @@ public class PathNavigationAStar
     {
         //todo calculate the midpoint per lane
         var pathMidpoint = NavigationPathUtilties.GetRelativePositionAlongPath(path, 0.5f);
-
-        //todo think of how to handle other road types that can handle road vehicles
+        
         var validLanes = path.PathType.Lanes.Where(lane => _validLaneTypes.Contains(lane.Type)).ToList();
 
         var pathLength = path.From.Position.DistanceTo(path.To.Position);
