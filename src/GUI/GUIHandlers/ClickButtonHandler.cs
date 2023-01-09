@@ -5,19 +5,16 @@ using LMTS.CommandSystem.Commands.LocalCommands;
 using LMTS.GUI.Abstract;
 using LMTS.GUI.Enums;
 using LMTS.InputToolSystem.Enums;
-using LMTS.InputToolSystem.Tools;
 using MediatR;
 
 namespace LMTS.GUI.GUIHandlers
 {
     public class ClickButtonHandler: IClickButtonHandler
     {
-        private readonly PlaceNavigationPathTool _placeNavigationPathTool;
         private readonly IMediator _mediator;
 
-        public ClickButtonHandler(PlaceNavigationPathTool placeNavigationPathTool, IMediator mediator)
+        public ClickButtonHandler(IMediator mediator)
         {
-            _placeNavigationPathTool = placeNavigationPathTool;
             _mediator = mediator;
         }
 
@@ -29,6 +26,9 @@ namespace LMTS.GUI.GUIHandlers
             {
                 case ButtonAction.ActivatePlaceRoadTool:
                     command = new ActivateToolCommand(ToolType.PlaceNavigationPath, actionData);
+                    break;
+                case ButtonAction.ActivatePlaceBuildingTool:
+                    command = new ActivateToolCommand(ToolType.PlaceBuilding, actionData);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);

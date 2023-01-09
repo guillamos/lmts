@@ -3,5 +3,6 @@
     public enum ButtonAction
     {
         ActivatePlaceRoadTool,
+        ActivatePlaceBuildingTool
     }
 }

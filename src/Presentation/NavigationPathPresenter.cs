@@ -70,11 +70,6 @@ public partial class NavigationPathPresenter: Node3D
     {
         //translation for preventing z fighting
         var baseTranslation = new Vector3(0, 0.1f, 0);
-        
-        var fromPosition = newPath.From.Position + baseTranslation;
-        var toPosition = newPath.To.Position + baseTranslation;
-        
-        var perpendicularDirectionVector = fromPosition.DirectionTo(toPosition).Rotated(Vector3.Up, (float)Math.PI / 2);
 
         var newArrayMesh = new ArrayMesh();
         
@@ -89,12 +84,15 @@ public partial class NavigationPathPresenter: Node3D
             st.Begin(Mesh.PrimitiveType.Triangles);
             
             var currentIndex = 0;
-            
-            var fromPoint = fromPosition + (perpendicularDirectionVector * (float)lane.Offset);
-            var fromPointOffset = fromPosition + (perpendicularDirectionVector * ((float)lane.Offset + (float)lane.Width));
-            
-            var toPoint = toPosition + (perpendicularDirectionVector * (float)lane.Offset);
-            var toPointOffset = toPosition + (perpendicularDirectionVector * ((float)lane.Offset + (float)lane.Width));
+
+            var fromPoint =
+                NavigationPathGeometryUtilties.GetRelativePositionAlongPath(newPath, 0, lane.Offset) + baseTranslation;
+            var fromPointOffset =
+                NavigationPathGeometryUtilties.GetRelativePositionAlongPath(newPath, 0, lane.Offset + lane.Width) + baseTranslation;
+            var toPoint = 
+                NavigationPathGeometryUtilties.GetRelativePositionAlongPath(newPath, 1, lane.Offset) + baseTranslation;
+            var toPointOffset = 
+                NavigationPathGeometryUtilties.GetRelativePositionAlongPath(newPath, 1, lane.Offset + lane.Width) + baseTranslation;
             
             switch (lane.Type)
             {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using LMTS.Common.Abstract;
 using LMTS.Common.Enums;
 using LMTS.Common.Models.StaticData;
@@ -19,4 +21,7 @@ public class WorldNavigationPath: BaseWorldObject
     public WorldNavigationJunction From { get; }
     public WorldNavigationJunction To { get; }
     public PathType PathType { get; }
+
+    //getter for lanes so we can later override them on a per-path basis
+    public Dictionary<int, PathLane> Lanes => PathType.Lanes.Select((item, idx) => (idx, item)).ToDictionary(l => l.idx, l => l.item);
 }

@@ -2,5 +2,6 @@
 
 public enum ToolType
 {
-    PlaceNavigationPath
+    PlaceNavigationPath,
+    PlaceBuilding
 }
