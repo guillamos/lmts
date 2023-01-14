@@ -2,14 +2,13 @@
 using System.Collections.Specialized;
 using System.Linq;
 using Godot;
-using LMTS.Common.Enums;
 using LMTS.Common.Models.World;
 using LMTS.Common.Utilities;
 using LMTS.DependencyInjection;
 using LMTS.Presentation.Utilities;
 using LMTS.State.WorldState.Abstract;
 
-namespace LMTS.Presentation;
+namespace LMTS.Presentation.World;
 
 public partial class NavigationJunctionPresenter: Node3D
 {

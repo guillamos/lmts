@@ -31,6 +31,7 @@ public class NavigationGraphManager
             case NotifyCollectionChangedAction.Add:
                 if (e.NewItems != null)
                 {
+                    //todo: ignore non-final items
                     foreach (var path in e.NewItems.OfType<WorldNavigationPath>())
                     {
                         _roadGraph.AddNewPath(path);

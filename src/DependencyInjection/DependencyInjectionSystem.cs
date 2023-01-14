@@ -15,6 +15,9 @@ using LMTS.InputToolSystem;
 using LMTS.InputToolSystem.Abstract;
 using LMTS.InputToolSystem.Tools;
 using LMTS.Navigation;
+using LMTS.Presentation.Overlay;
+using LMTS.Presentation.Overlay.Datasources;
+using LMTS.Presentation.Overlay.Enums;
 using LMTS.State.LocalState;
 using LMTS.State.WorldState.Abstract;
 using LMTS.State.WorldState.Collections;
@@ -54,10 +57,20 @@ public partial class DependencyInjectionSystem: Node
         
         _container.RegisterSingleton<PathTypeInitializer>();
         
+        _container.RegisterSingleton<OverlayDataStore>();
         _container.RegisterSingleton<StaticDataStore>();
         
         _container.RegisterSingleton<IWorldStateCollectionStore<WorldNavigationPath>, WorldNavigationPathCollectionStore>();
         _container.RegisterSingleton<IWorldStateCollectionStore<WorldNavigationJunction>, WorldNavigationJunctionCollectionStore>();
+        
+        
+        _container.RegisterSingleton<LaneOverlayDataSource>();
+        
+        //todo refactor this to something more extendable
+        _container.RegisterInstance(new OverlayDataSourceFactory(_container)
+        {
+            { OverlayType.Lanes, typeof(LaneOverlayDataSource) },
+        });
         
         _container.RegisterSingleton<NavigationGraphManager>();
         

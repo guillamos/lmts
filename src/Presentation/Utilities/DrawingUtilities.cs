@@ -4,9 +4,13 @@ namespace LMTS.Presentation.Utilities;
 
 public static class DrawingUtilities
 {
-    public static int RenderQuad(SurfaceTool st, int currentIndex, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, bool invert = false)
+    public static int RenderQuad(SurfaceTool st, int currentIndex, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, bool invert = false, Color? color = null)
     {
         st.SetUv(new Vector2(0, 1));
+        if (color != null)
+        {
+            st.SetColor(color.Value);
+        }
         if (invert)
         {
             st.AddVertex(v4);
@@ -17,6 +21,10 @@ public static class DrawingUtilities
         }
 
         st.SetUv(new Vector2(0, 0));
+        if (color != null)
+        {
+            st.SetColor(color.Value);
+        }
         if (invert)
         {
             st.AddVertex(v3);
@@ -27,6 +35,10 @@ public static class DrawingUtilities
         }
 
         st.SetUv(new Vector2(1, 0));
+        if (color != null)
+        {
+            st.SetColor(color.Value);
+        }
         if (invert)
         {
             st.AddVertex(v2);
@@ -37,6 +49,10 @@ public static class DrawingUtilities
         }
         
         st.SetUv(new Vector2(1, 1));
+        if (color != null)
+        {
+            st.SetColor(color.Value);
+        }
         if (invert)
         {
             st.AddVertex(v1);

@@ -19,6 +19,7 @@ public class ActivateToolCommandHandler: IRequestHandler<ActivateToolCommand>
 
     public Task<Unit> Handle(ActivateToolCommand request, CancellationToken cancellationToken)
     {
+        //todo refactor mapping to DI
         var tool = _toolMapping.GetTool(request.Type);
         _toolManager.SetActiveTool(tool, request.ExtraData);
         

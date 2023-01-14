@@ -3,6 +3,7 @@
     public enum ButtonAction
     {
         ActivatePlaceRoadTool,
-        ActivatePlaceBuildingTool
+        ActivatePlaceBuildingTool,
+        ToggleLaneOverlay,
     }
 }

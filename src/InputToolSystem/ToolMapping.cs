@@ -5,6 +5,7 @@ using LMTS.InputToolSystem.Tools;
 
 namespace LMTS.InputToolSystem;
 
+//todo refactor to DI
 public class ToolMapping: IToolMapping
 {
     private readonly IDictionary<ToolType, IInputTool> _mapping;

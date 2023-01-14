@@ -1,13 +1,14 @@
-[gd_scene load_steps=15 format=3 uid="uid://c0v4qoleewo63"]
+[gd_scene load_steps=16 format=3 uid="uid://bl6ihtnimljmr"]
 
 [ext_resource type="Script" path="res://src/DependencyInjection/DependencyInjectionSystem.cs" id="1_vegin"]
 [ext_resource type="Script" path="res://src/GUI/Inputs/GenericClickButton.cs" id="1_yxlo1"]
 [ext_resource type="Script" path="res://src/NodeScripts/GameInitializer.cs" id="2_bfjjw"]
 [ext_resource type="Script" path="res://src/NodeScripts/MainGameCamera.cs" id="2_og3ho"]
 [ext_resource type="Script" path="res://src/NodeScripts/MainSimulationLoop.cs" id="3_8am4c"]
-[ext_resource type="Script" path="res://src/Presentation/NavigationPathPresenter.cs" id="5_wxqvv"]
-[ext_resource type="Script" path="res://src/Presentation/NavigationJunctionPresenter.cs" id="7_enxqc"]
+[ext_resource type="Script" path="res://src/Presentation/World/NavigationPathPresenter.cs" id="5_wxqvv"]
+[ext_resource type="Script" path="res://src/Presentation/World/NavigationJunctionPresenter.cs" id="7_enxqc"]
 [ext_resource type="Material" uid="uid://3o4cn0ramkil" path="res://assets/material/sidewalk.tres" id="7_vjhff"]
+[ext_resource type="Script" path="res://src/Presentation/Overlay/OverlayPresenter.cs" id="8_8g2uu"]
 
 [sub_resource type="Environment" id="Environment_klno4"]
 
@@ -54,9 +55,14 @@ layout_mode = 2
 
 [node name="Place road" type="Button" parent="Dev menu/Panel/TabContainer/Tools"]
 layout_mode = 2
-text = "Place
-"
+text = "Place road"
 script = ExtResource("1_yxlo1")
+
+[node name="Toggle lane overlay" type="Button" parent="Dev menu/Panel/TabContainer/Tools"]
+layout_mode = 2
+text = "Toggle lane overlay"
+script = ExtResource("1_yxlo1")
+_action = 2
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_klno4")
@@ -92,6 +98,9 @@ script = ExtResource("5_wxqvv")
 
 [node name="NavigationJunctionPresenter" type="Node3D" parent="Presenters"]
 script = ExtResource("7_enxqc")
+
+[node name="OverlayPresenter" type="Node3D" parent="Presenters"]
+script = ExtResource("8_8g2uu")
 
 [node name="TestingMesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CylinderMesh_mxx37")

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LMTS.Common.Models.StaticData;
 
 namespace LMTS.State.LocalState;

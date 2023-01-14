@@ -5,6 +5,7 @@ using LMTS.CommandSystem.Commands.LocalCommands;
 using LMTS.GUI.Abstract;
 using LMTS.GUI.Enums;
 using LMTS.InputToolSystem.Enums;
+using LMTS.Presentation.Overlay.Enums;
 using MediatR;
 
 namespace LMTS.GUI.GUIHandlers
@@ -29,6 +30,9 @@ namespace LMTS.GUI.GUIHandlers
                     break;
                 case ButtonAction.ActivatePlaceBuildingTool:
                     command = new ActivateToolCommand(ToolType.PlaceBuilding, actionData);
+                    break;
+                case ButtonAction.ToggleLaneOverlay:
+                    command = new ToggleOverlayCommand(OverlayType.Lanes);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);

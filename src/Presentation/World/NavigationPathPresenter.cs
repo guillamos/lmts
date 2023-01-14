@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using Godot;
-using LMTS.Common.Constants;
 using LMTS.Common.Enums;
 using LMTS.Common.Models.World;
 using LMTS.Common.Utilities;
 using LMTS.DependencyInjection;
 using LMTS.Presentation.Utilities;
 using LMTS.State.WorldState.Abstract;
-using LMTS.State.WorldState.Collections;
 
-namespace LMTS.Presentation;
+namespace LMTS.Presentation.World;
 
 public partial class NavigationPathPresenter: Node3D
 {
