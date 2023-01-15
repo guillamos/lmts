@@ -24,12 +24,12 @@ public class PathTypeInitializer
         var pathTypes = new List<PathType>()
         {
             new PathType("BASIC_ROAD", 10,
-                new List<PathLane>()
+                new List<PathLaneSettings>()
                 {
-                    new PathLane(PathLaneType.Sidewalk, PathLaneDirection.Bidirectional, -5, 2),
-                    new PathLane(PathLaneType.BasicRoad, PathLaneDirection.ToToFrom, -3, 3),
-                    new PathLane(PathLaneType.BasicRoad, PathLaneDirection.FromToTo, 0, 3),
-                    new PathLane(PathLaneType.Sidewalk, PathLaneDirection.Bidirectional, 3, 2),
+                    new PathLaneSettings(PathLaneType.Sidewalk, PathLaneDirection.Bidirectional, -5, 2),
+                    new PathLaneSettings(PathLaneType.BasicRoad, PathLaneDirection.ToToFrom, -3, 3),
+                    new PathLaneSettings(PathLaneType.BasicRoad, PathLaneDirection.FromToTo, 0, 3),
+                    new PathLaneSettings(PathLaneType.Sidewalk, PathLaneDirection.Bidirectional, 3, 2),
                 })
         };
         

@@ -83,13 +83,13 @@ public partial class NavigationPathPresenter: Node3D
             var currentIndex = 0;
 
             var fromPoint =
-                NavigationPathGeometryUtilties.GetRelativePositionAlongPath(newPath, 0, lane.Offset) + baseTranslation;
+                NavigationPathGeometryUtilities.GetRelativePositionAlongPath(newPath, 0, lane.Offset) + baseTranslation;
             var fromPointOffset =
-                NavigationPathGeometryUtilties.GetRelativePositionAlongPath(newPath, 0, lane.Offset + lane.Width) + baseTranslation;
+                NavigationPathGeometryUtilities.GetRelativePositionAlongPath(newPath, 0, lane.Offset + lane.Width) + baseTranslation;
             var toPoint = 
-                NavigationPathGeometryUtilties.GetRelativePositionAlongPath(newPath, 1, lane.Offset) + baseTranslation;
+                NavigationPathGeometryUtilities.GetRelativePositionAlongPath(newPath, 1, lane.Offset) + baseTranslation;
             var toPointOffset = 
-                NavigationPathGeometryUtilties.GetRelativePositionAlongPath(newPath, 1, lane.Offset + lane.Width) + baseTranslation;
+                NavigationPathGeometryUtilities.GetRelativePositionAlongPath(newPath, 1, lane.Offset + lane.Width) + baseTranslation;
             
             switch (lane.Type)
             {

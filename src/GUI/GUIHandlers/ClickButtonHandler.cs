@@ -32,7 +32,7 @@ namespace LMTS.GUI.GUIHandlers
                     command = new ActivateToolCommand(ToolType.PlaceBuilding, actionData);
                     break;
                 case ButtonAction.ToggleLaneOverlay:
-                    command = new ToggleOverlayCommand(OverlayType.Lanes);
+                    command = new ToggleOverlayCommand(OverlayType.LanesAndConnections);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);

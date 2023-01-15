@@ -2,26 +2,26 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using LMTS.Common.Enums;
 using LMTS.Common.Models.World;
+using LMTS.Navigation.Abstract;
+using LMTS.Navigation.NavigationGraphs;
 using LMTS.State.WorldState.Abstract;
 
 namespace LMTS.Navigation;
 
+//todo is this class necessary?
 public class NavigationGraphManager
 {
-    private PathNavigationAStar _roadGraph;
-    private PathNavigationAStar _pedestrianGraph;
+    private IList<INavigationGraph> _navigationGraphs = new List<INavigationGraph>();
     private readonly IWorldStateCollectionStore<WorldNavigationJunction> _junctionCollectionStore;
     private readonly IWorldStateCollectionStore<WorldNavigationPath> _pathCollectionStore;
 
-    public NavigationGraphManager(IWorldStateCollectionStore<WorldNavigationJunction> junctionCollectionStore, IWorldStateCollectionStore<WorldNavigationPath> pathCollectionStore)
+    public NavigationGraphManager(IWorldStateCollectionStore<WorldNavigationJunction> junctionCollectionStore, IWorldStateCollectionStore<WorldNavigationPath> pathCollectionStore, RoadVehicleNavigationGraph roadVehicleNavigationGraph)
     {
         _junctionCollectionStore = junctionCollectionStore;
         _pathCollectionStore = pathCollectionStore;
-        _roadGraph = new PathNavigationAStar(new List<PathLaneType>() { PathLaneType.BasicRoad });
-        _pedestrianGraph = new PathNavigationAStar(new List<PathLaneType>() { PathLaneType.Sidewalk });
         _pathCollectionStore.Items.CollectionChanged += PathsChanged;
+        _navigationGraphs.Add(roadVehicleNavigationGraph);
     }
 
     private void PathsChanged (object sender, NotifyCollectionChangedEventArgs e)
@@ -34,8 +34,10 @@ public class NavigationGraphManager
                     //todo: ignore non-final items
                     foreach (var path in e.NewItems.OfType<WorldNavigationPath>())
                     {
-                        _roadGraph.AddNewPath(path);
-                        _pedestrianGraph.AddNewPath(path);
+                        foreach (var graph in _navigationGraphs)
+                        {
+                            graph.AddNewPath(path);
+                        }
                     }
                 }
                 break;

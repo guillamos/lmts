@@ -39,12 +39,8 @@ public partial class OverlayPresenter: Node3D
     {
         if (_dataSource != null)
         {
-            foreach (var item in _dataSource.GetOverlayItems())
-            {
-                RemoveRenderedOverlayItem(item);
-            }
-            _dataSource.GetOverlayItems().CollectionChanged -= OverlayItemsChanged;
             _dataSource.Deactivate();
+            _dataSource.OverlayItemCollectionChanged -= OverlayItemsChanged;
         }
 
         if (type != null)
@@ -58,12 +54,8 @@ public partial class OverlayPresenter: Node3D
 
         if (_dataSource != null)
         {
+            _dataSource.OverlayItemCollectionChanged += OverlayItemsChanged;
             _dataSource.Activate();
-            foreach (var item in _dataSource.GetOverlayItems())
-            {
-                RenderOverlayItem(item);
-            }
-            _dataSource.GetOverlayItems().CollectionChanged += OverlayItemsChanged;
         }
     }
     
@@ -96,7 +88,10 @@ public partial class OverlayPresenter: Node3D
                 throw new NotImplementedException();
                 break;
             case NotifyCollectionChangedAction.Reset:
-                throw new NotImplementedException();
+                foreach (var overlayItem in _renderedItems)
+                {
+                    RemoveRenderedOverlayItem(overlayItem.Key);
+                }
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -151,7 +146,7 @@ public partial class OverlayPresenter: Node3D
     {
         if(_renderedItems.TryGetValue(item, out var sceneItem))
         {
-            RemoveChild(sceneItem);
+            sceneItem.QueueFree();
             _renderedItems.Remove(item);
         }
     }

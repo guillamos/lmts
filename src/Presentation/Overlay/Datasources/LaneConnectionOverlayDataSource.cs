@@ -4,33 +4,38 @@ using System.Collections.Specialized;
 using System.Linq;
 using Godot;
 using LMTS.Common.Enums;
+using LMTS.Common.Models.Navigation;
 using LMTS.Common.Models.World;
 using LMTS.Common.Utilities;
+using LMTS.Navigation.NavigationGraphs;
 using LMTS.Presentation.Overlay.Abstract;
 using LMTS.Presentation.Overlay.Models;
 using LMTS.State.WorldState.Abstract;
 
 namespace LMTS.Presentation.Overlay.Datasources;
 
-public class LaneOverlayDataSource: BaseOverlayDataSource
+public class LaneConnectionOverlayDataSource: BaseOverlayDataSource
 {
     private readonly IWorldStateCollectionStore<WorldNavigationJunction> _junctionCollectionStore;
     
     private readonly IWorldStateCollectionStore<WorldNavigationPath> _pathCollectionStore;
 
-    public LaneOverlayDataSource(IWorldStateCollectionStore<WorldNavigationJunction> junctionCollectionStore, IWorldStateCollectionStore<WorldNavigationPath> pathCollectionStore)
+    private readonly RoadVehicleNavigationGraph _roadVehicleNavigationGraph;
+
+    public LaneConnectionOverlayDataSource(IWorldStateCollectionStore<WorldNavigationJunction> junctionCollectionStore, IWorldStateCollectionStore<WorldNavigationPath> pathCollectionStore, RoadVehicleNavigationGraph roadVehicleNavigationGraph)
     {
         _junctionCollectionStore = junctionCollectionStore;
         _pathCollectionStore = pathCollectionStore;
+        _roadVehicleNavigationGraph = roadVehicleNavigationGraph;
     }
 
     public override void Activate()
     {
-        foreach (var path in _pathCollectionStore.Items)
+        foreach (var connection in _roadVehicleNavigationGraph.LaneConnections)
         {
-            CreateOverlayItemsFromWorldPath(path);
+            CreateOverlayItemsFromLaneConnection(connection);
         }
-        _pathCollectionStore.Items.CollectionChanged += PathsChanged;
+        _roadVehicleNavigationGraph.LaneConnections.CollectionChanged += PathsChanged;
     }
 
     public override void Deactivate()
@@ -56,9 +61,9 @@ public class LaneOverlayDataSource: BaseOverlayDataSource
             case NotifyCollectionChangedAction.Add:
                 if (e.NewItems != null)
                 {
-                    foreach (var path in e.NewItems.OfType<WorldNavigationPath>())
+                    foreach (var connection in e.NewItems.OfType<LaneConnection>())
                     {
-                        CreateOverlayItemsFromWorldPath(path);
+                        CreateOverlayItemsFromLaneConnection(connection);
                     }
                 }
                 break;
@@ -79,18 +84,16 @@ public class LaneOverlayDataSource: BaseOverlayDataSource
         }
     }
 
-    private void CreateOverlayItemsFromWorldPath(WorldNavigationPath path)
+    private void CreateOverlayItemsFromLaneConnection(LaneConnection connection)
     {
-        foreach (var lane in path.Lanes)
-        {
-            var laneMiddle = NavigationPathGeometryUtilities.GetLaneMiddleOffset(lane.Value);
-
-            var from = NavigationPathGeometryUtilities.GetRelativePositionAlongPath(path, 0, laneMiddle);
-            var to = NavigationPathGeometryUtilities.GetRelativePositionAlongPath(path, 1, laneMiddle);
-
-            var color = lane.Value.Settings.Type == PathLaneType.Sidewalk ? Color.Color8(0, 255, 0) : Color.Color8(255, 0, 0);
+        var fromPoint =
+            NavigationPathGeometryUtilities.GetLaneJunctionConnectionPoint(connection.LaneFrom, connection.Junction);
+        
+        var toPoint =
+            NavigationPathGeometryUtilities.GetLaneJunctionConnectionPoint(connection.LaneTo, connection.Junction);
             
-            _overlayItems.Add(new OverlayLine(lane.Value.Identifier.ToString(), false, from, to, color, 0.4m));
-        }
+        var color = connection.LaneFrom.Settings.Type == PathLaneType.Sidewalk ? Color.Color8(0, 255, 0) : Color.Color8(255, 0, 0);
+        
+        _overlayItems.Add(new OverlayLine(connection.LaneFrom.Identifier.ToString() + connection.LaneTo.Identifier.ToString(), false, fromPoint, toPoint, color, 0.4m));
     }
 }

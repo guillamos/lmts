@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LMTS.CommandSystem.Commands.WorldCommands;
@@ -28,6 +29,7 @@ public class PlaceNavigationPathCommandHandler: IRequestHandler<PlaceNavigationP
     {
         if (!_commandValidator.IsValid(request))
         {
+            throw new NotImplementedException();
             //todo should we return something? is any feedback needed?
             return Task.FromResult(Unit.Value);
         }
@@ -43,10 +45,12 @@ public class PlaceNavigationPathCommandHandler: IRequestHandler<PlaceNavigationP
         }
         
         _pathCollectionStore.Items.Add(path);
+        
+        firstJunctionInStore.LinkedPaths.Add(path);
+        secondJunctionInStore.LinkedPaths.Add(path);
 
         firstJunctionInStore.State = WorldObjectState.Finalized;
         secondJunctionInStore.State = WorldObjectState.Finalized;
-        
 
         return Task.FromResult(Unit.Value);
     }

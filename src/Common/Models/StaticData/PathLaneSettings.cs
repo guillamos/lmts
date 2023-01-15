@@ -4,11 +4,12 @@ using LMTS.Common.Abstract;
 
 namespace LMTS.Common.Models.StaticData;
 
-public class PathLane
+public class PathLaneSettings
 {
-    public PathLane(PathLaneType type, PathLaneDirection direction, decimal offset, decimal width)
+    public PathLaneSettings(PathLaneType type, PathLaneDirection direction, decimal offset, decimal width)
     {
         Type = type;
+        Direction = direction;
         Offset = offset;
         Width = width;
     }

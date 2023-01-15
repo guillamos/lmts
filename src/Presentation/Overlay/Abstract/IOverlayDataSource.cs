@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace LMTS.Presentation.Overlay.Abstract
 {
@@ -7,8 +8,8 @@ namespace LMTS.Presentation.Overlay.Abstract
         public void Activate();
 
         public void Deactivate();
-        public ObservableCollection<IOverlayItem> GetOverlayItems();
 
         public void ClickedItem(IOverlayItem item);
+        public event NotifyCollectionChangedEventHandler OverlayItemCollectionChanged;
     }
 }

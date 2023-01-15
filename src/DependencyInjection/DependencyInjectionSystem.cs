@@ -15,6 +15,7 @@ using LMTS.InputToolSystem;
 using LMTS.InputToolSystem.Abstract;
 using LMTS.InputToolSystem.Tools;
 using LMTS.Navigation;
+using LMTS.Navigation.NavigationGraphs;
 using LMTS.Presentation.Overlay;
 using LMTS.Presentation.Overlay.Datasources;
 using LMTS.Presentation.Overlay.Enums;
@@ -65,14 +66,19 @@ public partial class DependencyInjectionSystem: Node
         
         
         _container.RegisterSingleton<LaneOverlayDataSource>();
+        _container.RegisterSingleton<LaneConnectionOverlayDataSource>();
+        _container.RegisterSingleton<LanesAndConnectionsOverlayDataSource>();
         
         //todo refactor this to something more extendable
         _container.RegisterInstance(new OverlayDataSourceFactory(_container)
         {
             { OverlayType.Lanes, typeof(LaneOverlayDataSource) },
+            { OverlayType.LaneConnections, typeof(LaneConnectionOverlayDataSource) },
+            { OverlayType.LanesAndConnections, typeof(LanesAndConnectionsOverlayDataSource) },
         });
         
         _container.RegisterSingleton<NavigationGraphManager>();
+        _container.RegisterSingleton<RoadVehicleNavigationGraph>();
         
         AddMediatr(_container);
     }
