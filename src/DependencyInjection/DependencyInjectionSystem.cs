@@ -6,6 +6,8 @@ using System.Reflection;
 using Godot;
 using LMTS.CommandSystem.Validators.WorldCommandValidators;
 using LMTS.Common.Models.World;
+using LMTS.CommonServices;
+using LMTS.CommonServices.Abstract;
 using LMTS.GUI.Abstract;
 using LMTS.GUI.GUIHandlers;
 using LMTS.Initialization;
@@ -53,16 +55,21 @@ public partial class DependencyInjectionSystem: Node
         _container.RegisterSingleton<IToolMapping, ToolMapping>();
         
         _container.RegisterSingleton<PlaceNavigationPathTool>();
+        _container.RegisterSingleton<PlaceBuildingTool>();
         
         _container.RegisterSingleton<PlaceNavigationPathCommandValidator>();
+        _container.RegisterSingleton<PlaceBuildingCommandValidator>();
         
         _container.RegisterSingleton<PathTypeInitializer>();
         
         _container.RegisterSingleton<OverlayDataStore>();
         _container.RegisterSingleton<StaticDataStore>();
         
+        _container.RegisterSingleton<IPathInteractionPointService, PathInteractionPointService>();
+        
         _container.RegisterSingleton<IWorldStateCollectionStore<WorldNavigationPath>, WorldNavigationPathCollectionStore>();
         _container.RegisterSingleton<IWorldStateCollectionStore<WorldNavigationJunction>, WorldNavigationJunctionCollectionStore>();
+        _container.RegisterSingleton<IWorldStateCollectionStore<WorldBuilding>, WorldBuildingCollectionStore>();
         
         
         _container.RegisterSingleton<LaneOverlayDataSource>();

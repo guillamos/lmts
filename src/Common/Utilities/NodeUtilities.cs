@@ -18,6 +18,10 @@ public static class NodeUtilities
         {
             node.SetMeta(MetadataConstants.MetaTypeKey, MetadataConstants.MetaTypeNavigationPath);
         }
+        else if (worldObject is WorldBuilding b)
+        {
+            node.SetMeta(MetadataConstants.MetaTypeKey, MetadataConstants.MetaTypeBuilding);
+        }
         else
         {
             throw new ArgumentOutOfRangeException();

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using LMTS.Common.Models.Input;
 using LMTS.InputHandling.Abstract;
 
@@ -6,20 +7,32 @@ namespace LMTS.InputHandling;
 
 public class InputManager: IInputManager
 {
-    private IEnumerable<RayPickedObject> _lastClickPickedObjects { get; set; }
+    private IEnumerable<RayPickedObject> LastPickedObjects { get; set; }
+    private bool Clicked { get; set; }
     
-    public void AddClickInputForTick(IEnumerable<RayPickedObject> input)
+    public void AddMousePickObjectsForTick(IEnumerable<RayPickedObject> input)
     {
-        _lastClickPickedObjects = input;
+        LastPickedObjects = input;
     }
 
     public void ClearClickInputForTick()
     {
-        _lastClickPickedObjects = null;
+        Clicked = false;
+        LastPickedObjects = null;
     }
 
-    public IEnumerable<RayPickedObject> GetPickedObjectsForTick()
+    public IEnumerable<RayPickedObject> GetHoveredObjectsForTick()
     {
-        return _lastClickPickedObjects;
+        return LastPickedObjects;
+    }
+    
+    public IEnumerable<RayPickedObject> GetClickedObjectsForTick()
+    {
+        return Clicked ? LastPickedObjects : Enumerable.Empty<RayPickedObject>();
+    }
+    
+    public void SetClicked()
+    {
+        Clicked = true;
     }
 }

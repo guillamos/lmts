@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Godot;
 using LMTS.Common.Abstract;
 using LMTS.Common.Enums;
@@ -11,11 +12,14 @@ namespace LMTS.Common.Models.World;
 /// </summary>
 public class WorldBuilding: BaseWorldObject
 {
-    public WorldBuilding(WorldObjectState state, Vector3 position) : base(state)
+    public WorldBuilding(WorldObjectState state, Vector3 originPosition, IEnumerable<Vector3> plotPolygon) : base(state)
     {
-        Position = position;
+        OriginPosition = originPosition;
+        PlotPolygon = plotPolygon;
     }
     
-    public Vector3 Position { get; set; }
+    public Vector3 OriginPosition { get; set; }
+    
+    public IEnumerable<Vector3> PlotPolygon { get; set; }
 
 }

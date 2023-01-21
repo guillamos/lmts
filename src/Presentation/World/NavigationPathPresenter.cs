@@ -118,7 +118,7 @@ public partial class NavigationPathPresenter: Node3D
             st.GenerateNormals();
             st.GenerateTangents();
             st.Index();
-
+            
             newArrayMesh = st.Commit(newArrayMesh);
         }
         

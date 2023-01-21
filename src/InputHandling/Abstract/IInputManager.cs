@@ -5,7 +5,9 @@ namespace LMTS.InputHandling.Abstract;
 
 public interface IInputManager
 {
-    void AddClickInputForTick(IEnumerable<RayPickedObject> input);
-    IEnumerable<RayPickedObject> GetPickedObjectsForTick();
+    void AddMousePickObjectsForTick(IEnumerable<RayPickedObject> input);
     void ClearClickInputForTick();
+    IEnumerable<RayPickedObject> GetHoveredObjectsForTick();
+    IEnumerable<RayPickedObject> GetClickedObjectsForTick();
+    void SetClicked();
 }

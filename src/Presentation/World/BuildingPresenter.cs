@@ -10,40 +10,35 @@ using LMTS.State.WorldState.Abstract;
 
 namespace LMTS.Presentation.World;
 
-public partial class NavigationJunctionPresenter: Node3D
+public partial class BuildingPresenter: Node3D
 {
     [Inject]
-    private readonly IWorldStateCollectionStore<WorldNavigationJunction> _junctionCollectionStore;
+    private readonly IWorldStateCollectionStore<WorldBuilding> _buildingCollectionStore;
     
-    /*[Inject]
-    private readonly IWorldStateCollectionStore<WorldNavigationPath> _pathCollectionStore;*/
-
-    private Material _asphaltMaterial;
-    private Material _sidewalkMaterial;
+    private Material _buildingMaterial;
 
     public override void _Ready()
     {
         this.ResolveDependencies();
 
-        _asphaltMaterial = ResourceLoader.Load<Material>("res://assets/material/asphalt.tres");
-        _sidewalkMaterial = ResourceLoader.Load<Material>("res://assets/material/sidewalk.tres");
-        
+        _buildingMaterial = ResourceLoader.Load<Material>("res://assets/material/overlay.tres");
+
         //todo listen for property changes
-        _junctionCollectionStore.Items.CollectionChanged += JunctionsChanged;
+        _buildingCollectionStore.Items.CollectionChanged += BuildingsChanged;
         
         //todo listen for path changes as these influence junctions
     }
 
-    private void JunctionsChanged (object sender, NotifyCollectionChangedEventArgs e)
+    private void BuildingsChanged (object sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add:
                 if (e.NewItems != null)
                 {
-                    foreach (var junction in e.NewItems.OfType<WorldNavigationJunction>())
+                    foreach (var building in e.NewItems.OfType<WorldBuilding>())
                     {
-                        RenderJunction(junction);
+                        RenderBuilding(building);
                     }
                 }
                 break;
@@ -64,27 +59,29 @@ public partial class NavigationJunctionPresenter: Node3D
         }
     }
 
-    private void RenderJunction(WorldNavigationJunction newJunction)
+    private void RenderBuilding(WorldBuilding newBuilding)
     {
         //translation for preventing z fighting
         var baseTranslation = new Vector3(0, 0.3f, 0);
-        var translatedJunctionPosition = newJunction.Position + baseTranslation;
+        var translatedBuildingPosition = newBuilding.OriginPosition + baseTranslation;
         
-        //todo: think of how to actually render a junction
+        //todo: think of how to actually render a building
 
         var newArrayMesh = new ArrayMesh();
         
         var st = new SurfaceTool();
 
         st.Begin(Mesh.PrimitiveType.Triangles);
+        
+        st.SetMaterial(_buildingMaterial);
 
         var currentIndex = 0;
-        var offsetVector1 = new Vector3(-5, 0, -5) + translatedJunctionPosition;
-        var offsetVector2 = new Vector3(-5, 0, 5) + translatedJunctionPosition;
-        var offsetVector3 = new Vector3(5, 0, 5) + translatedJunctionPosition;
-        var offsetVector4 = new Vector3(5, 0, -5) + translatedJunctionPosition;
-        
-        currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, offsetVector1, offsetVector2, offsetVector3, offsetVector4, true);
+        var offsetVector1 = new Vector3(-2, 0, -2) + translatedBuildingPosition;
+        var offsetVector2 = new Vector3(-2, 0, 2) + translatedBuildingPosition;
+        var offsetVector3 = new Vector3(2, 0, 2) + translatedBuildingPosition;
+        var offsetVector4 = new Vector3(2, 0, -2) + translatedBuildingPosition;
+
+        currentIndex = DrawingUtilities.RenderQuad(st, currentIndex, offsetVector1, offsetVector2, offsetVector3, offsetVector4, true, new Color(255, 0, 0));
         
         st.GenerateNormals();
         st.GenerateTangents();
@@ -100,8 +97,8 @@ public partial class NavigationJunctionPresenter: Node3D
 
         var newCollision = newMeshInstance.GetChildren().OfType<StaticBody3D>().First();
         
-        NodeUtilities.SetWorldObjectMeta(newCollision, newJunction);
-        NodeUtilities.SetWorldObjectMeta(newMeshInstance, newJunction);
+        NodeUtilities.SetWorldObjectMeta(newCollision, newBuilding);
+        NodeUtilities.SetWorldObjectMeta(newMeshInstance, newBuilding);
 
         AddChild(newMeshInstance);
         

@@ -41,7 +41,7 @@ public partial class MainGameCamera : Camera3D
 				Rotation = newVector;
 			}
 		}
-		
+
 		if (inputEvent is InputEventMouseButton mouseButtonEvent)
 		{
 			switch (mouseButtonEvent.ButtonIndex)
@@ -49,7 +49,7 @@ public partial class MainGameCamera : Camera3D
 				case MouseButton.Left:
 					if (inputEvent.IsPressed())
 					{
-						PickMouseCameraRay();
+						_inputManager.SetClicked();
 					}
 					break;
 				case MouseButton.Right:
@@ -76,6 +76,8 @@ public partial class MainGameCamera : Camera3D
 		).Normalized();
 
 		Translate(direction * _velocity * (float)delta);
+		
+		PickMouseCameraRay();
 	}
 
 	private void PickMouseCameraRay()
@@ -107,6 +109,6 @@ public partial class MainGameCamera : Camera3D
 			}
 		}
 		
-		_inputManager.AddClickInputForTick(hitObjects);
+		_inputManager.AddMousePickObjectsForTick(hitObjects);
 	}
 }

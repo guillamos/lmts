@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using LMTS.InputToolSystem.Abstract;
 using LMTS.InputToolSystem.Enums;
 using LMTS.InputToolSystem.Tools;
@@ -10,12 +11,13 @@ public class ToolMapping: IToolMapping
 {
     private readonly IDictionary<ToolType, IInputTool> _mapping;
 
-    public ToolMapping(PlaceNavigationPathTool placeNavigationPathTool)
+    public ToolMapping(PlaceNavigationPathTool placeNavigationPathTool, PlaceBuildingTool placeBuildingTool)
     {
 
         _mapping = new Dictionary<ToolType, IInputTool>()
         {
-            { ToolType.PlaceNavigationPath, placeNavigationPathTool }
+            { ToolType.PlaceNavigationPath, placeNavigationPathTool },
+            { ToolType.PlaceBuilding, placeBuildingTool }
         };
     }
 
@@ -23,7 +25,7 @@ public class ToolMapping: IToolMapping
     {
         if (!_mapping.ContainsKey(toolType))
         {
-            return null;
+            throw new ArgumentException($"Tool {toolType} is not defined");
         }
         
         return _mapping[toolType];

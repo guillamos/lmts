@@ -51,7 +51,7 @@ public class PlaceNavigationPathTool: IInputTool
 
     public void ProcessTick()
     {
-        var clickedItems = _inputManager.GetPickedObjectsForTick();
+        var clickedItems = _inputManager.GetClickedObjectsForTick();
 
         if (clickedItems == null)
         {

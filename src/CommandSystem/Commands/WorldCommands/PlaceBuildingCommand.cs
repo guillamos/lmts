@@ -1,14 +1,18 @@
-﻿using Godot;
+﻿using System.Collections.Generic;
+using Godot;
 using MediatR;
 
 namespace LMTS.CommandSystem.Commands.WorldCommands;
 
 public class PlaceBuildingCommand : IRequest
 {
-    public PlaceBuildingCommand(Vector3 centerPosition)
+    public PlaceBuildingCommand(Vector3 originPosition, IEnumerable<Vector3> plotPolygon)
     {
-        CenterPosition = centerPosition;
+        OriginPosition = originPosition;
+        PlotPolygon = plotPolygon;
     }
     
-    public Vector3 CenterPosition { get; set; }
+    public Vector3 OriginPosition { get; set; }
+    
+    public IEnumerable<Vector3> PlotPolygon { get; set; }
 }

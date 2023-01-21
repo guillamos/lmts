@@ -1,4 +1,6 @@
-﻿namespace LMTS.Common.Constants;
+﻿using Godot;
+
+namespace LMTS.Common.Constants;
 
 public static class MetadataConstants
 {
@@ -7,4 +9,5 @@ public static class MetadataConstants
     
     public static readonly string MetaTypeNavigationPath = "navigationPath";
     public static readonly string MetaTypeNavigationJunction = "navigationJunction";
+    public static readonly string MetaTypeBuilding = "building";
 }

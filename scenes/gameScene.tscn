@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bl6ihtnimljmr"]
+[gd_scene load_steps=17 format=3 uid="uid://bl6ihtnimljmr"]
 
 [ext_resource type="Script" path="res://src/DependencyInjection/DependencyInjectionSystem.cs" id="1_vegin"]
 [ext_resource type="Script" path="res://src/GUI/Inputs/GenericClickButton.cs" id="1_yxlo1"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://src/Presentation/World/NavigationJunctionPresenter.cs" id="7_enxqc"]
 [ext_resource type="Material" uid="uid://3o4cn0ramkil" path="res://assets/material/sidewalk.tres" id="7_vjhff"]
 [ext_resource type="Script" path="res://src/Presentation/Overlay/OverlayPresenter.cs" id="8_8g2uu"]
+[ext_resource type="Script" path="res://src/Presentation/World/BuildingPresenter.cs" id="9_d41vs"]
 
 [sub_resource type="Environment" id="Environment_klno4"]
 
@@ -58,6 +59,12 @@ layout_mode = 2
 text = "Place road"
 script = ExtResource("1_yxlo1")
 
+[node name="Place building" type="Button" parent="Dev menu/Panel/TabContainer/Tools"]
+layout_mode = 2
+text = "Place building"
+script = ExtResource("1_yxlo1")
+_action = 1
+
 [node name="Toggle lane overlay" type="Button" parent="Dev menu/Panel/TabContainer/Tools"]
 layout_mode = 2
 text = "Toggle lane overlay"
@@ -101,6 +108,9 @@ script = ExtResource("7_enxqc")
 
 [node name="OverlayPresenter" type="Node3D" parent="Presenters"]
 script = ExtResource("8_8g2uu")
+
+[node name="BuildingPresenter" type="Node3D" parent="Presenters"]
+script = ExtResource("9_d41vs")
 
 [node name="TestingMesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CylinderMesh_mxx37")

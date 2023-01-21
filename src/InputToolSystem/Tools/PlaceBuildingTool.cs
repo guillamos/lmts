@@ -1,5 +1,6 @@
 ﻿using LMTS.CommandSystem.Commands.WorldCommands;
 using LMTS.CommandSystem.Validators.WorldCommandValidators;
+using LMTS.CommonServices.Abstract;
 using LMTS.InputHandling.Abstract;
 using LMTS.InputToolSystem.Abstract;
 using MediatR;
@@ -12,12 +13,16 @@ public class PlaceBuildingTool: IInputTool
     
     private readonly PlaceBuildingCommandValidator _placeBuildingCommandValidator;
     private readonly IMediator _mediator;
+    private readonly IPathInteractionPointService _pathInteractionPointService;
 
-    public PlaceBuildingTool(IInputManager inputManager, PlaceBuildingCommandValidator placeBuildingCommandValidator, IMediator mediator)
+    private const float MaximumSnapDistance = 2;
+
+    public PlaceBuildingTool(IInputManager inputManager, PlaceBuildingCommandValidator placeBuildingCommandValidator, IMediator mediator, IPathInteractionPointService pathInteractionPointService)
     {
         _inputManager = inputManager;
         _placeBuildingCommandValidator = placeBuildingCommandValidator;
         _mediator = mediator;
+        _pathInteractionPointService = pathInteractionPointService;
     }
 
     public void Activate(string extraData)
@@ -32,25 +37,24 @@ public class PlaceBuildingTool: IInputTool
 
     public void ProcessTick()
     {
-        var clickedItems = _inputManager.GetPickedObjectsForTick();
-
-        if (clickedItems == null)
-        {
-            return;
-        }
+        var clickedItems = _inputManager.GetClickedObjectsForTick();
 
         foreach (var clickedItem in clickedItems)
         {
             if (clickedItem.Node.Name == "FloorPlane")
             {
-                //create a new junction on this position
-                //todo: check if this is a valid position for a junction
-                var placeCommand = new PlaceBuildingCommand(clickedItem.PickedPosition);
-                
-                var validationResult = _placeBuildingCommandValidator.IsValid(placeCommand);
-                if (validationResult)
+                var closePoint = _pathInteractionPointService.GetClosestInteractionPoint(clickedItem.PickedPosition, MaximumSnapDistance);
+
+                if (closePoint != null)
                 {
-                    _mediator.Send(placeCommand);
+                    //todo calculate polygon
+                    var placeCommand = new PlaceBuildingCommand(closePoint.Position, new []{ closePoint.Position });
+
+                    var validationResult = _placeBuildingCommandValidator.IsValid(placeCommand);
+                    if (validationResult)
+                    {
+                        _mediator.Send(placeCommand);
+                    }
                 }
                 
                 break;
