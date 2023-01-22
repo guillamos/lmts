@@ -21,6 +21,7 @@ using LMTS.Navigation.NavigationGraphs;
 using LMTS.Presentation.Overlay;
 using LMTS.Presentation.Overlay.Datasources;
 using LMTS.Presentation.Overlay.Enums;
+using LMTS.Simulation;
 using LMTS.State.LocalState;
 using LMTS.State.WorldState.Abstract;
 using LMTS.State.WorldState.Collections;
@@ -67,10 +68,13 @@ public partial class DependencyInjectionSystem: Node
         
         _container.RegisterSingleton<IPathInteractionPointService, PathInteractionPointService>();
         
+        _container.RegisterSingleton<TripGenerator>();
+        _container.RegisterSingleton<TripSimulator>();
+        
         _container.RegisterSingleton<IWorldStateCollectionStore<WorldNavigationPath>, WorldNavigationPathCollectionStore>();
         _container.RegisterSingleton<IWorldStateCollectionStore<WorldNavigationJunction>, WorldNavigationJunctionCollectionStore>();
         _container.RegisterSingleton<IWorldStateCollectionStore<WorldBuilding>, WorldBuildingCollectionStore>();
-        
+        _container.RegisterSingleton<IWorldStateCollectionStore<WorldTrip>, WorldTripCollectionStore>();
         
         _container.RegisterSingleton<LaneOverlayDataSource>();
         _container.RegisterSingleton<LaneConnectionOverlayDataSource>();

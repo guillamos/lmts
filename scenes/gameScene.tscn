@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bl6ihtnimljmr"]
+[gd_scene load_steps=19 format=3 uid="uid://bl6ihtnimljmr"]
 
 [ext_resource type="Script" path="res://src/DependencyInjection/DependencyInjectionSystem.cs" id="1_vegin"]
 [ext_resource type="Script" path="res://src/GUI/Inputs/GenericClickButton.cs" id="1_yxlo1"]
@@ -11,7 +11,15 @@
 [ext_resource type="Script" path="res://src/Presentation/Overlay/OverlayPresenter.cs" id="8_8g2uu"]
 [ext_resource type="Script" path="res://src/Presentation/World/BuildingPresenter.cs" id="9_d41vs"]
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_432eb"]
+ground_horizon_color = Color(0.647059, 0.654902, 0.670588, 1)
+
+[sub_resource type="Sky" id="Sky_r068o"]
+sky_material = SubResource("ProceduralSkyMaterial_432eb")
+
 [sub_resource type="Environment" id="Environment_klno4"]
+background_mode = 2
+sky = SubResource("Sky_r068o")
 
 [sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_4qbrp"]
 
@@ -95,7 +103,7 @@ script = ExtResource("2_og3ho")
 _velocity = 46.42
 
 [node name="DirectionalLight3d" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.813101, 0.524096, -0.253358, 0, 0.435231, 0.900319, 0.582123, -0.73205, 0.353887, 0, 8.24193, 5.24779)
+transform = Transform3D(-0.840567, -0.454829, 0.294242, 0, 0.543174, 0.83962, -0.541708, 0.705756, -0.456574, 0, 0, 0)
 shadow_enabled = true
 
 [node name="Presenters" type="Node3D" parent="."]

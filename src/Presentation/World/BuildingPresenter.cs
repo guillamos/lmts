@@ -27,9 +27,10 @@ public partial class BuildingPresenter: Node3D
         _buildingCollectionStore.Items.CollectionChanged += BuildingsChanged;
         
         //todo listen for path changes as these influence junctions
+        
     }
 
-    private void BuildingsChanged (object sender, NotifyCollectionChangedEventArgs e)
+    private void BuildingsChanged (object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {

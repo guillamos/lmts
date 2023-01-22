@@ -16,6 +16,7 @@ public abstract class PathNavigationGraph: INavigationGraph
     private readonly AStar3D _aStarGraph;
     private readonly IEnumerable<PathLaneType> _validLaneTypes;
     private readonly IDictionary<LaneIdentifier, long> _pathLaneIds = new Dictionary<LaneIdentifier, long>();
+    private readonly IDictionary<long, LaneIdentifier> _pathLaneIdsByGraphId = new Dictionary<long, LaneIdentifier>();
     private long _newIdCounter = 0;
 
     public ObservableCollection<LaneConnection> LaneConnections { get; } = new();
@@ -24,6 +25,19 @@ public abstract class PathNavigationGraph: INavigationGraph
     {
         _validLaneTypes = validLaneTypes;
         _aStarGraph = new AStar3D();
+    }
+
+    public IEnumerable<LaneIdentifier> GetBestRoute(LaneIdentifier from, LaneIdentifier to)
+    {
+        var graphFrom = _pathLaneIds[from];
+        var graphTo = _pathLaneIds[to];
+
+        var route = _aStarGraph.GetIdPath(graphFrom, graphTo);
+
+        foreach (var routeNode in route)
+        {
+            yield return _pathLaneIdsByGraphId[routeNode];
+        }
     }
     
     public void AddNewPath(WorldNavigationPath path)
@@ -91,8 +105,10 @@ public abstract class PathNavigationGraph: INavigationGraph
         var pathLength = lane.Path.From.Position.DistanceTo(lane.Path.To.Position);
         
         var newLaneId = _newIdCounter++;
+        var laneIdentifier = new LaneIdentifier(lane.Path.Identifier, lane.Identifier.Lane);
         
-        _pathLaneIds.Add(new LaneIdentifier(lane.Path.Identifier, lane.Identifier.Lane), newLaneId);
+        _pathLaneIds.Add(laneIdentifier, newLaneId);
+        _pathLaneIdsByGraphId.Add(newLaneId, laneIdentifier);
 
         //todo calculate weight based on factors like lane max speed etc instead of only distance
         _aStarGraph.AddPoint(newLaneId, pathMidpoint, pathLength);
