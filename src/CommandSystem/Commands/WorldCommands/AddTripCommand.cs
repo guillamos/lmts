@@ -8,7 +8,7 @@ namespace LMTS.CommandSystem.Commands.WorldCommands;
 
 public class AddTripCommand: IRequest
 {
-    public AddTripCommand(WorldBuilding from, WorldBuilding to, Vector3 fromPosition, Vector3 toPosition, IEnumerable<TripItineraryNode> tripItinerary)
+    public AddTripCommand(WorldBuilding from, WorldBuilding to, Vector3 fromPosition, Vector3 toPosition, IList<TripItineraryNode> tripItinerary)
     {
         From = from;
         To = to;
@@ -25,5 +25,5 @@ public class AddTripCommand: IRequest
     
     public Vector3 ToPosition { get; set; }
     
-    public IEnumerable<TripItineraryNode> TripItinerary { get; set; }
+    public IList<TripItineraryNode> TripItinerary { get; set; }
 }

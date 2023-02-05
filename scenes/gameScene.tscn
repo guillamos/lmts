@@ -97,7 +97,7 @@ transform = Transform3D(10000, 0, 0, 0, 10000, 0, 0, 0, 10000, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_1cbps")
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.700685, 0.713471, 0, -0.713471, 0.700685, -0.144804, 7.8453, 10.3625)
+transform = Transform3D(1, 0, 0, 0, 0.700685, 0.713471, 0, -0.713471, 0.700685, -0.144804, 20.2308, 18.2142)
 near = 1.0
 script = ExtResource("2_og3ho")
 _velocity = 46.42

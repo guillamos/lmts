@@ -18,6 +18,7 @@ namespace LMTS.Simulation;
 public class TripGenerator
 {
     private readonly IWorldStateCollectionStore<WorldBuilding> _buildingCollectionStore;
+    private readonly IWorldStateCollectionStore<WorldNavigationPath> _pathCollectionStore;
     private readonly IPathInteractionPointService _pathInteractionPointService;
     private readonly IMediator _mediator;
     private readonly RoadVehicleNavigationGraph _roadVehicleNavigationGraph;
@@ -26,12 +27,13 @@ public class TripGenerator
 
     private Random _random = new();
 
-    public TripGenerator(IWorldStateCollectionStore<WorldBuilding> buildingCollectionStore, IPathInteractionPointService pathInteractionPointService, IMediator mediator, RoadVehicleNavigationGraph roadVehicleNavigationGraph)
+    public TripGenerator(IWorldStateCollectionStore<WorldBuilding> buildingCollectionStore, IPathInteractionPointService pathInteractionPointService, IMediator mediator, RoadVehicleNavigationGraph roadVehicleNavigationGraph, IWorldStateCollectionStore<WorldNavigationPath> pathCollectionStore)
     {
         _buildingCollectionStore = buildingCollectionStore;
         _pathInteractionPointService = pathInteractionPointService;
         _mediator = mediator;
         _roadVehicleNavigationGraph = roadVehicleNavigationGraph;
+        _pathCollectionStore = pathCollectionStore;
     }
 
     public void PhysicsProcess(int tickRate, uint currentPhysicsTick)
@@ -94,7 +96,15 @@ public class TripGenerator
             var itinerary = 
                 _roadVehicleNavigationGraph.GetBestRoute(originClosestPathLane.Value.Identifier, destinationClosestPathLane.Value.Identifier);
 
-            var mappedItinerary = itinerary.Select(lane => new TripItineraryNode() { Lane = lane });
+            var mappedItinerary = MapTripItineraryNodes(itinerary);
+
+            if (mappedItinerary.Count == 0)
+            {
+                continue;
+            }
+
+            mappedItinerary = mappedItinerary.Prepend(new TripItineraryNode(startPoint))
+                .Append(new TripItineraryNode(destinationPoint)).ToList();
 
             var newTripCommand = new AddTripCommand(originBuilding, destinationBuilding,startPoint, destinationPoint, mappedItinerary);
 
@@ -102,5 +112,22 @@ public class TripGenerator
                 
             _lastSpawnByBuildingId[originBuilding.Identifier] = currentPhysicsTick;
         }
+    }
+
+    private List<TripItineraryNode> MapTripItineraryNodes(IEnumerable<(Vector3 point, LaneIdentifier lane)> itinerary)
+    {
+        var mappedItinerary = new List<TripItineraryNode>();
+
+        foreach (var itineraryNode in itinerary)
+        {
+            var newItineraryNode = new TripItineraryNode(
+                itineraryNode.point,
+                itineraryNode.lane
+            );
+
+            mappedItinerary.Add(newItineraryNode);
+        }
+
+        return mappedItinerary;
     }
 }

@@ -19,8 +19,7 @@ public class AddTripCommandHandler: IRequestHandler<AddTripCommand>
 
     public Task<Unit> Handle(AddTripCommand request, CancellationToken cancellationToken)
     {
-        var mappedWorldTrip = new WorldTrip(WorldObjectState.Finalized, request.From, request.To, request.FromPosition, 
-            request.ToPosition, request.TripItinerary);
+        var mappedWorldTrip = new WorldTrip(WorldObjectState.Finalized, request.From, request.To, request.TripItinerary);
         
         _tripCollectionStore.Items.Add(mappedWorldTrip);
         
