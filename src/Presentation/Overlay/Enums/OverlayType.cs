@@ -4,5 +4,5 @@ public enum OverlayType
 {
     Lanes,
     LaneConnections,
-    LanesAndConnections,
+    Tool,
 }

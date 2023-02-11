@@ -67,6 +67,9 @@ public class TripSimulator
     private void AddTrip(WorldTrip worldTrip)
     {
         var meshInstance = new MeshInstance3D();
+        
+        
+        
         _parentNode.AddChild(meshInstance);
         
         meshInstance.Mesh = _mesh;
@@ -80,7 +83,7 @@ public class TripSimulator
             0,
             worldTrip.TripItinerary.Skip(1).First().Position,
             worldTrip.TripItinerary.First().Lane,
-            meshInstance.GetInstanceId(),
+            meshInstance,
             1
         ));
     }
@@ -92,7 +95,7 @@ public class TripSimulator
         for (int i = _simulatedTrips.Count - 1; i >= 0; i--)
         {
             var trip = _simulatedTrips[i];
-            var instance = (MeshInstance3D)GD.InstanceFromId(trip.MeshInstanceId);
+
             
             //just accelerate until we have information about other entities and maximum path speeds
             //todo add braking conditions
@@ -113,7 +116,7 @@ public class TripSimulator
 
                     if (trip.CurrentGoalIndex == trip.WorldTripReference.TripItinerary.Count)
                     {
-                        instance.QueueFree();
+                        trip.MeshInstance.QueueFree();
                         carryoverSpeed = 0;
                         _simulatedTrips.RemoveAt(i);
                         continue;
@@ -130,7 +133,7 @@ public class TripSimulator
                     carryoverSpeed -= distance;
                 }
                 
-                instance.Position = trip.CurrentPosition + new Vector3(0, 0.2f, 0);
+                trip.MeshInstance.Position = trip.CurrentPosition + new Vector3(0, 0.2f, 0);
             }
         }
     }

@@ -57,6 +57,7 @@ public partial class DependencyInjectionSystem: Node
         
         _container.RegisterSingleton<PlaceNavigationPathTool>();
         _container.RegisterSingleton<PlaceBuildingTool>();
+        _container.RegisterSingleton<InspectTool>();
         
         _container.RegisterSingleton<PlaceNavigationPathCommandValidator>();
         _container.RegisterSingleton<PlaceBuildingCommandValidator>();
@@ -78,14 +79,14 @@ public partial class DependencyInjectionSystem: Node
         
         _container.RegisterSingleton<LaneOverlayDataSource>();
         _container.RegisterSingleton<LaneConnectionOverlayDataSource>();
-        _container.RegisterSingleton<LanesAndConnectionsOverlayDataSource>();
-        
+        _container.RegisterSingleton<ToolOverlayDataSource>();
+
         //todo refactor this to something more extendable
         _container.RegisterInstance(new OverlayDataSourceFactory(_container)
         {
             { OverlayType.Lanes, typeof(LaneOverlayDataSource) },
             { OverlayType.LaneConnections, typeof(LaneConnectionOverlayDataSource) },
-            { OverlayType.LanesAndConnections, typeof(LanesAndConnectionsOverlayDataSource) },
+            { OverlayType.Tool, typeof(ToolOverlayDataSource) },
         });
         
         _container.RegisterSingleton<NavigationGraphManager>();

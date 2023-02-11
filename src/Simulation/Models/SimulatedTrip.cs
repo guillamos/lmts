@@ -7,14 +7,14 @@ namespace LMTS.Simulation.Models;
 public class SimulatedTrip
 {
     public SimulatedTrip(WorldTrip worldTripReference, Vector3 currentPosition, float currentSpeed,
-        Vector3 currentGoalPosition, LaneIdentifier? currentLane, ulong meshInstanceId, int currentGoalIndex)
+        Vector3 currentGoalPosition, LaneIdentifier? currentLane, MeshInstance3D meshInstance, int currentGoalIndex)
     {
         WorldTripReference = worldTripReference;
         CurrentPosition = currentPosition;
         CurrentSpeed = currentSpeed;
         CurrentGoalPosition = currentGoalPosition;
         CurrentLane = currentLane;
-        MeshInstanceId = meshInstanceId;
+        MeshInstance = meshInstance;
         CurrentGoalIndex = currentGoalIndex;
     }
     
@@ -25,5 +25,5 @@ public class SimulatedTrip
     public LaneIdentifier? CurrentLane { get; set; }
     
     public int CurrentGoalIndex { get; set; }
-    public ulong MeshInstanceId { get; set; }
+    public MeshInstance3D MeshInstance { get; set; }
 }

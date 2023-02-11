@@ -11,13 +11,14 @@ public class ToolMapping: IToolMapping
 {
     private readonly IDictionary<ToolType, IInputTool> _mapping;
 
-    public ToolMapping(PlaceNavigationPathTool placeNavigationPathTool, PlaceBuildingTool placeBuildingTool)
+    public ToolMapping(PlaceNavigationPathTool placeNavigationPathTool, PlaceBuildingTool placeBuildingTool, InspectTool inspectTool)
     {
 
         _mapping = new Dictionary<ToolType, IInputTool>()
         {
             { ToolType.PlaceNavigationPath, placeNavigationPathTool },
-            { ToolType.PlaceBuilding, placeBuildingTool }
+            { ToolType.PlaceBuilding, placeBuildingTool },
+            { ToolType.Inspect, inspectTool }
         };
     }
 

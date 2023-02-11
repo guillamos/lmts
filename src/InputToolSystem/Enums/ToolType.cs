@@ -3,5 +3,6 @@
 public enum ToolType
 {
     PlaceNavigationPath,
-    PlaceBuilding
+    PlaceBuilding,
+    Inspect
 }

@@ -73,11 +73,17 @@ text = "Place building"
 script = ExtResource("1_yxlo1")
 _action = 1
 
+[node name="Inspect" type="Button" parent="Dev menu/Panel/TabContainer/Tools"]
+layout_mode = 2
+text = "Inspect"
+script = ExtResource("1_yxlo1")
+_action = 2
+
 [node name="Toggle lane overlay" type="Button" parent="Dev menu/Panel/TabContainer/Tools"]
 layout_mode = 2
 text = "Toggle lane overlay"
 script = ExtResource("1_yxlo1")
-_action = 2
+_action = 3
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_klno4")
