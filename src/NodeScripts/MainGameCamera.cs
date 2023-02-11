@@ -33,10 +33,10 @@ public partial class MainGameCamera : Camera3D
 		{
 			if(inputEvent is InputEventMouseMotion mouseEvent)
 			{
-				var newVector = new Vector3(Rotation.x, Rotation.y, Rotation.z);
-				newVector.y -= mouseEvent.Relative.x / 1000 * _sensitivity;
-				newVector.x -= mouseEvent.Relative.y / 1000 * _sensitivity;
-				newVector.x = (float)Math.Clamp(Rotation.x, Math.PI / -2, Math.PI / 2);
+				var newVector = new Vector3(Rotation.X, Rotation.Y, Rotation.Z);
+				newVector.Y -= mouseEvent.Relative.X / 1000 * _sensitivity;
+				newVector.X -= mouseEvent.Relative.Y / 1000 * _sensitivity;
+				newVector.X = (float)Math.Clamp(Rotation.X, Math.PI / -2, Math.PI / 2);
 
 				Rotation = newVector;
 			}
@@ -86,7 +86,8 @@ public partial class MainGameCamera : Camera3D
 		var rayFrom = ProjectRayOrigin(mousePos);
 		const int rayLength = 1000;
 		var rayTo = rayFrom + ProjectRayNormal(mousePos) * rayLength;
-		var spaceState = GetWorld3d().DirectSpaceState;
+		var spaceState = GetWorld3D().DirectSpaceState;
+		
 		var rayQuery = PhysicsRayQueryParameters3D.Create(rayFrom, rayTo);
 		var selection = spaceState.IntersectRay(rayQuery);
 
@@ -100,7 +101,7 @@ public partial class MainGameCamera : Camera3D
 			if (colliderObject is CollisionObject3D node)
 			{
 				hitObjects.Add(new RayPickedObject(node, hitPosition));
-				rayQuery.Exclude = new Godot.Collections.Array<RID>(hitObjects.Select(ho => ho.Node.GetRid()));
+				rayQuery.Exclude = new Godot.Collections.Array<Rid>(hitObjects.Select(ho => ho.Node.GetRid()));
 				selection = spaceState.IntersectRay(rayQuery);
 			}
 			else

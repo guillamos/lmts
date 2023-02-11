@@ -15,8 +15,8 @@ public abstract class PathNavigationGraph: INavigationGraph
 {
     private readonly AStar3D _aStarGraph;
     private readonly IEnumerable<PathLaneType> _validLaneTypes;
-    private readonly IDictionary<LaneIdentifier, long> _pathLaneIds = new Dictionary<LaneIdentifier, long>();
-    private readonly IDictionary<long, LaneIdentifier> _pathLaneIdsByGraphId = new Dictionary<long, LaneIdentifier>();
+    private readonly IDictionary<(LaneIdentifier lane, int pointIndex), long> _pathLaneIds = new Dictionary<(LaneIdentifier lane, int pointIndex), long>();
+    private readonly IDictionary<long, (LaneIdentifier lane, int pointIndex)> _pathLaneIdsByGraphId = new Dictionary<long, (LaneIdentifier lane, int pointIndex)>();
     private long _newIdCounter = 0;
 
     public ObservableCollection<LaneConnection> LaneConnections { get; } = new();
@@ -27,16 +27,18 @@ public abstract class PathNavigationGraph: INavigationGraph
         _aStarGraph = new AStar3D();
     }
 
-    public IEnumerable<LaneIdentifier> GetBestRoute(LaneIdentifier from, LaneIdentifier to)
+    //todo return TripItineraryNodes?
+    public IEnumerable<(Vector3 position, LaneIdentifier lane)> GetBestRoute(LaneIdentifier from, LaneIdentifier to)
     {
-        var graphFrom = _pathLaneIds[from];
-        var graphTo = _pathLaneIds[to];
+        var graphFrom = _pathLaneIds[(from, 1)];
+        var graphTo = _pathLaneIds[(to, 0)];
 
         var route = _aStarGraph.GetIdPath(graphFrom, graphTo);
 
         foreach (var routeNode in route)
         {
-            yield return _pathLaneIdsByGraphId[routeNode];
+            var position = _aStarGraph.GetPointPosition(routeNode);
+            yield return (position, _pathLaneIdsByGraphId[routeNode].lane);
         }
     }
     
@@ -100,18 +102,27 @@ public abstract class PathNavigationGraph: INavigationGraph
 
     private void AddLane(PathLane lane)
     {
-        //todo calculate the midpoint per lane
-        var pathMidpoint = NavigationPathGeometryUtilities.GetRelativePositionAlongPath(lane.Path, 0.5f);
-        var pathLength = lane.Path.From.Position.DistanceTo(lane.Path.To.Position);
-        
-        var newLaneId = _newIdCounter++;
-        var laneIdentifier = new LaneIdentifier(lane.Path.Identifier, lane.Identifier.Lane);
-        
-        _pathLaneIds.Add(laneIdentifier, newLaneId);
-        _pathLaneIdsByGraphId.Add(newLaneId, laneIdentifier);
-
+        var pathStart = lane.Settings.Direction == PathLaneDirection.FromToTo 
+            ? NavigationPathGeometryUtilities.GetLaneRelativePosition(lane, 0f, false) 
+            : NavigationPathGeometryUtilities.GetLaneRelativePosition(lane, 1f, false);
+        var pathEnd = lane.Settings.Direction == PathLaneDirection.FromToTo 
+            ? NavigationPathGeometryUtilities.GetLaneRelativePosition(lane, 1f, false) 
+            : NavigationPathGeometryUtilities.GetLaneRelativePosition(lane, 0f, false);
         //todo calculate weight based on factors like lane max speed etc instead of only distance
-        _aStarGraph.AddPoint(newLaneId, pathMidpoint, pathLength);
+        
+        var newLaneId1 = _newIdCounter++;
+        var laneIdentifier = new LaneIdentifier(lane.Path.Identifier, lane.Identifier.Lane);
+        _pathLaneIds.Add((laneIdentifier, 0), newLaneId1);
+        _pathLaneIdsByGraphId.Add(newLaneId1, (laneIdentifier, 0));
+        _aStarGraph.AddPoint(newLaneId1, pathStart);
+        
+        var newLaneId2 = _newIdCounter++;
+        laneIdentifier = new LaneIdentifier(lane.Path.Identifier, lane.Identifier.Lane);
+        _pathLaneIds.Add((laneIdentifier, 1), newLaneId2);
+        _pathLaneIdsByGraphId.Add(newLaneId2, (laneIdentifier, 1));
+        _aStarGraph.AddPoint(newLaneId2, pathEnd);
+        
+        _aStarGraph.ConnectPoints(newLaneId1, newLaneId2, lane.Settings.Direction == PathLaneDirection.Bidirectional);
     }
 
     private void ConnectLanes(PathLane from, PathLane to, bool isBidirectional, WorldNavigationJunction viaJunction)
@@ -119,8 +130,8 @@ public abstract class PathNavigationGraph: INavigationGraph
         var laneId1 = from.Identifier;
         var laneId2 = to.Identifier;
         
-        var aStarLaneId1 = _pathLaneIds[laneId1];
-        var aStarLaneId2 = _pathLaneIds[laneId2];
+        var aStarLaneId1 = _pathLaneIds[(laneId1, 1)];
+        var aStarLaneId2 = _pathLaneIds[(laneId2, 0)];
 
         _aStarGraph.ConnectPoints(aStarLaneId1, aStarLaneId2, isBidirectional);
         LaneConnections.Add(new LaneConnection(from, to, viaJunction));

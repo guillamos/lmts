@@ -76,6 +76,27 @@ public static class NavigationPathGeometryUtilities
         throw new ArgumentException();
     }
     
+    public static Vector3 GetLaneRelativePosition(PathLane lane, float relativePosition, bool correctForDirection)
+    {
+        var laneMiddle = GetLaneMiddleOffset(lane);
+
+        if (!correctForDirection)
+        {
+            return GetRelativePositionAlongPath(lane.Path, relativePosition, laneMiddle);
+        }
+        
+        if (lane.Settings.Direction is PathLaneDirection.FromToTo or PathLaneDirection.Bidirectional)
+        {
+            return GetRelativePositionAlongPath(lane.Path, relativePosition, laneMiddle);
+        }
+        if (lane.Settings.Direction is PathLaneDirection.ToToFrom)
+        {
+            return GetRelativePositionAlongPath(lane.Path, 1f - relativePosition, laneMiddle);
+        }
+
+        throw new ArgumentException();
+    }
+    
     //todo: precalculate?
     public static decimal GetLaneLeftOffset(PathLane lane)
     {
@@ -123,7 +144,7 @@ public static class NavigationPathGeometryUtilities
         
         foreach (var point in GetSpacedPointsOnSpline(offsetFromPointR, offsetToPointR, distanceBetweenPoints))
         {
-            yield return new PathInteractionPoint(PathInteractionPointSide.Left, counter++, point, path, rightNormal);
+            yield return new PathInteractionPoint(PathInteractionPointSide.Right, counter++, point, path, rightNormal);
         }
     }
 

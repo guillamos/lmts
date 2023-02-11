@@ -31,8 +31,13 @@ namespace LMTS.GUI.GUIHandlers
                 case ButtonAction.ActivatePlaceBuildingTool:
                     command = new ActivateToolCommand(ToolType.PlaceBuilding, actionData);
                     break;
+                case ButtonAction.ActivateInspectTool:
+                    command = new ActivateToolCommand(ToolType.Inspect, actionData);
+                    break;
                 case ButtonAction.ToggleLaneOverlay:
-                    command = new ToggleOverlayCommand(OverlayType.LanesAndConnections);
+                    command = new ToggleOverlayCommand(OverlayType.Lanes);
+                    _mediator.Send(command);
+                    command = new ToggleOverlayCommand(OverlayType.LaneConnections);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);

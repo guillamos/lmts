@@ -17,13 +17,13 @@ public class ToggleOverlayCommandHandler: IRequestHandler<ToggleOverlayCommand>
 
     public Task<Unit> Handle(ToggleOverlayCommand request, CancellationToken cancellationToken)
     {
-        if (_overlayDataStore.ActiveOverlay.Value == request.Type)
+        if (_overlayDataStore.ActiveOverlays.Contains(request.Type))
         {
-            _overlayDataStore.ActiveOverlay.OnNext(null);
+            _overlayDataStore.ActiveOverlays.Remove(request.Type);
         }
         else
         {
-            _overlayDataStore.ActiveOverlay.OnNext(request.Type);
+            _overlayDataStore.ActiveOverlays.Add(request.Type);
         }
 
         

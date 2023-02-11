@@ -4,6 +4,7 @@
     {
         ActivatePlaceRoadTool,
         ActivatePlaceBuildingTool,
+        ActivateInspectTool,
         ToggleLaneOverlay,
     }
 }

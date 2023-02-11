@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reactive.Linq;
 using Godot;
 using LMTS.DependencyInjection;
 using LMTS.Presentation.Overlay.Abstract;
@@ -20,7 +21,7 @@ public partial class OverlayPresenter: Node3D
     [Inject] 
     private readonly OverlayDataStore _overlayDataStore;
 
-    private IOverlayDataSource _dataSource;
+    private List<(OverlayType type, IOverlayDataSource dataSource)> _activeDataSources = new();
 
     private readonly IDictionary<IOverlayItem, Node3D> _renderedItems = new Dictionary<IOverlayItem, Node3D>();
     
@@ -29,33 +30,61 @@ public partial class OverlayPresenter: Node3D
     public override void _EnterTree()
     {
         this.ResolveDependencies();
-        
-        _overlayDataStore.ActiveOverlay.Subscribe(SetDataSource);
+
+        _overlayDataStore.ActiveOverlays.CollectionChanged += DataSourcesChanged;
         
         _overlayMaterial = ResourceLoader.Load<Material>("res://assets/material/overlay.tres");
     }
 
-    private void SetDataSource(OverlayType? type)
+    private void DataSourcesChanged (object sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_dataSource != null)
+        switch (e.Action)
         {
-            _dataSource.Deactivate();
-            _dataSource.OverlayItemCollectionChanged -= OverlayItemsChanged;
-        }
-
-        if (type != null)
-        {
-            _dataSource = _overlayDataSourceFactory.Create(type.Value);
-        }
-        else
-        {
-            _dataSource = null;
-        }
-
-        if (_dataSource != null)
-        {
-            _dataSource.OverlayItemCollectionChanged += OverlayItemsChanged;
-            _dataSource.Activate();
+            case NotifyCollectionChangedAction.Add:
+                if (e.NewItems != null)
+                {
+                    foreach (var item in e.NewItems.OfType<OverlayType>())
+                    {
+                        var dataSource = _overlayDataSourceFactory.Create(item);
+                        if (dataSource == null)
+                        {
+                            throw new NotImplementedException($"Invalid overlay {item}");
+                        }
+                        dataSource.OverlayItemCollectionChanged += OverlayItemsChanged;
+                        dataSource.Activate();
+                        _activeDataSources.Add((item, dataSource));
+                    }
+                }
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                if (e.OldItems != null)
+                {
+                    foreach (var item in e.OldItems.OfType<OverlayType>())
+                    {
+                        var match = _activeDataSources.FirstOrDefault(ds => ds.type == item);
+                        if (match != default)
+                        {
+                            match.dataSource.Deactivate();
+                            match.dataSource.OverlayItemCollectionChanged -= OverlayItemsChanged;
+                            _activeDataSources.Remove(match);
+                        }
+                    }
+                }
+                break;
+            case NotifyCollectionChangedAction.Replace:
+                throw new NotImplementedException();
+                break;
+            case NotifyCollectionChangedAction.Move:
+                throw new NotImplementedException();
+                break;
+            case NotifyCollectionChangedAction.Reset:
+                foreach (var overlayItem in _renderedItems)
+                {
+                    _activeDataSources.Clear();
+                }
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
     
