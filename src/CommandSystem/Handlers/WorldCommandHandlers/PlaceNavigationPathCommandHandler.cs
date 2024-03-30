@@ -55,9 +55,9 @@ public class PlaceNavigationPathCommandHandler: IRequestHandler<PlaceNavigationP
         return Task.FromResult(Unit.Value);
     }
 
-    public WorldNavigationJunction EnsureJunctionInStore(WorldNavigationJunction junction)
+    private WorldNavigationJunction EnsureJunctionInStore(Guid junctionIdentifier)
     {
-        var junctionInStore = _junctionCollectionStore.Items.FirstOrDefault(j => j == junction || j.Identifier == junction.Identifier);
+        var junctionInStore = _junctionCollectionStore.Items.FirstOrDefault(j => j.Identifier == junctionIdentifier);
 
         if (junctionInStore == null)
         {

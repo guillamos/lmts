@@ -26,7 +26,7 @@ public class LaneOverlayDataSource: BaseOverlayDataSource
 
     public override void Activate()
     {
-        foreach (var path in _pathCollectionStore.Items)
+        foreach (var path in _pathCollectionStore.Items.Values)
         {
             CreateOverlayItemsFromWorldPath(path);
         }

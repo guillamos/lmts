@@ -5,10 +5,10 @@ namespace LMTS.Common.Abstract;
 
 public class BaseWorldObject: IWorldObject
 {
-    public BaseWorldObject(WorldObjectState state)
+    public BaseWorldObject(Guid identifier, WorldObjectState state)
     {
+        Identifier = identifier;
         State = state;
-        Identifier = Guid.NewGuid();
     }
 
     public WorldObjectState State { get; set; }

@@ -7,16 +7,16 @@ namespace LMTS.CommandSystem.Commands.WorldCommands;
 
 public class PlaceNavigationPathCommand : IRequest
 {
-    public PlaceNavigationPathCommand(WorldNavigationJunction fromJunction, WorldNavigationJunction toJunction, PathType pathType)
+    public PlaceNavigationPathCommand(Guid fromJunction, Guid toJunction, PathType pathType)
     {
-        FromJunction = fromJunction ?? throw new ArgumentNullException(nameof(fromJunction));
-        ToJunction = toJunction ?? throw new ArgumentNullException(nameof(toJunction));
+        FromJunction = fromJunction;
+        ToJunction = toJunction;
         PathType = pathType;
     }
 
-    public WorldNavigationJunction FromJunction { get; set; }
+    public Guid FromJunction { get; set; }
     
-    public WorldNavigationJunction ToJunction { get; set; }
+    public Guid ToJunction { get; set; }
     
     public PathType PathType { get; set; }
 }

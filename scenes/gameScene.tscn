@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bl6ihtnimljmr"]
+[gd_scene load_steps=20 format=3 uid="uid://bl6ihtnimljmr"]
 
 [ext_resource type="Script" path="res://src/DependencyInjection/DependencyInjectionSystem.cs" id="1_vegin"]
 [ext_resource type="Script" path="res://src/GUI/Inputs/GenericClickButton.cs" id="1_yxlo1"]
@@ -31,6 +31,14 @@ albedo_color = Color(0.772549, 0.898039, 0.470588, 1)
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_1cbps"]
 points = PackedVector3Array(-1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, 1)
 
+[sub_resource type="Curve3D" id="Curve3D_hx3u7"]
+bake_interval = 0.01
+_data = {
+"points": PackedVector3Array(-2.02638, 0.357801, 3.88457, 2.02638, -0.357801, -3.88457, 10, 0, 10, 0, 0, 0, 0, 0, 0, 10, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+"tilts": PackedFloat32Array(0, 0, 0)
+}
+point_count = 3
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_mxx37"]
 
 [node name="Scene" type="Node3D"]
@@ -51,13 +59,13 @@ script = ExtResource("3_8am4c")
 [node name="Dev menu" type="Node2D" parent="."]
 
 [node name="Panel" type="Panel" parent="Dev menu"]
-offset_right = 261.0
-offset_bottom = 149.0
+offset_right = 272.0
+offset_bottom = 205.0
 
 [node name="TabContainer" type="TabContainer" parent="Dev menu/Panel"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 274.0
+offset_bottom = 206.0
 
 [node name="Tools" type="VBoxContainer" parent="Dev menu/Panel/TabContainer"]
 layout_mode = 2
@@ -125,6 +133,16 @@ script = ExtResource("8_8g2uu")
 
 [node name="BuildingPresenter" type="Node3D" parent="Presenters"]
 script = ExtResource("9_d41vs")
+
+[node name="Path3D" type="Path3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.82101, 0.416881, -0.255601)
+curve = SubResource("Curve3D_hx3u7")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="Path3D"]
+transform = Transform3D(0.447119, 0.00893714, 0.894422, -0.0199842, 0.999783, 1.85961e-13, -0.894238, -0.0178743, 0.447211, 10.2227, -0.0199844, 3.99354)
+progress = 5.711
+h_offset = 1.0
+cubic_interp = false
 
 [node name="TestingMesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CylinderMesh_mxx37")

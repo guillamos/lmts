@@ -65,7 +65,7 @@ public class InspectTool: IInputTool
                     var validPathLaneTypes = new List<PathLaneType>() { PathLaneType.BasicRoad };
                     
                     //todo make getting closest lane a utility function somewhere
-                    var closestPathLane = pathConnectingPoint.Side == PathInteractionPointSide.Left
+                    var closestPathLane = pathConnectingPoint.Type == PathInteractionPointType.SideLeft
                         ? pathConnectingPoint.Path.Lanes.FirstOrDefault(pl =>
                             validPathLaneTypes.Contains(pl.Value.Settings.Type))
                         : pathConnectingPoint.Path.Lanes.LastOrDefault(pl =>

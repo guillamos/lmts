@@ -135,7 +135,7 @@ public static class NavigationPathGeometryUtilities
 
         foreach (var point in GetSpacedPointsOnSpline(offsetFromPointL, offsetToPointL, distanceBetweenPoints))
         {
-            yield return new PathInteractionPoint(PathInteractionPointSide.Left, counter++, point, path, leftNormal);
+            yield return new PathInteractionPoint(PathInteractionPointType.SideLeft, counter++, point, path, leftNormal);
         }
         
         var rightNormal = offsetFromPointL.DirectionTo(offsetToPointL).Rotated(Vector3.Up, (float)Math.PI / 2);
@@ -144,7 +144,7 @@ public static class NavigationPathGeometryUtilities
         
         foreach (var point in GetSpacedPointsOnSpline(offsetFromPointR, offsetToPointR, distanceBetweenPoints))
         {
-            yield return new PathInteractionPoint(PathInteractionPointSide.Right, counter++, point, path, rightNormal);
+            yield return new PathInteractionPoint(PathInteractionPointType.SideRight, counter++, point, path, rightNormal);
         }
     }
 
